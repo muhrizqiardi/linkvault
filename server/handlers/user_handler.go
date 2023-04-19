@@ -10,7 +10,6 @@ import (
 	"server/utils"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/render"
 	"github.com/google/uuid"
 )
 
@@ -43,17 +42,17 @@ func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jsonInBytes, jsonErr := json.Marshal(map[string]any{
-		"success": true,
-		"message": "Successfully created User",
-	})
-	if jsonErr != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-	}
-
-	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(jsonInBytes))
+	w.WriteHeader(http.StatusCreated)
+	if encodeErr := json.NewEncoder(w).Encode(
+		utils.CreateBaseResponse(
+			true,
+			"User created",
+			nil,
+		),
+	); encodeErr != nil {
+
+	}
 }
 
 func (uh *UserHandler) GetManyUser(w http.ResponseWriter, r *http.Request) {
@@ -64,14 +63,19 @@ func (uh *UserHandler) GetManyUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jsonInBytes, jsonErr := json.Marshal(users)
-	if jsonErr != nil {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	if encodeErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse(
+		true,
+		"User(s) found",
+		users,
+	)); encodeErr != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		uh.l.Println(encodeErr)
+		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(jsonInBytes))
+	return
 }
 
 func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
@@ -89,11 +93,17 @@ func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	render.JSON(w, r, utils.CreateBaseResponse(
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	if encodeErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse(
 		true,
 		"User found",
 		user,
-	))
+	)); encodeErr != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		uh.l.Println(encodeErr)
+		return
+	}
 
 	return
 }
