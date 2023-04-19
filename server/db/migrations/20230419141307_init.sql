@@ -43,7 +43,7 @@ create table if not exists public.links (
 create table if not exists public.link_medias (
     id uuid default uuid_generate_v4() primary key,
     link_id uuid not null,
-    mediaUrl text not null,
+    media_url text not null,
     owner_id uuid not null,
 
     foreign key (owner_id)
