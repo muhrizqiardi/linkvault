@@ -45,6 +45,7 @@ func main() {
 	r.Get("/users", userHandler.GetManyUser)
 	r.Post("/users", userHandler.CreateUser)
 	r.Get("/users/{userId}", userHandler.GetOneUserById)
+	r.Patch("/users/{userId}", userHandler.UpdateOneUserById)
 
 	http.ListenAndServe(":9000", r)
 }
