@@ -3,7 +3,7 @@ package utils
 type BaseResponse struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
-	Data    any    `json:"data"`
+	Data    any    `json:"data,omitempty"`
 }
 
 func CreateBaseResponse(success bool, message string, data any) BaseResponse {
