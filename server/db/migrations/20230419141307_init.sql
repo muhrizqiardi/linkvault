@@ -65,3 +65,9 @@ create table if not exists public."File" (
 );
 
 -- migrate:down
+drop table public."File";
+drop table public."LinkMedia";
+drop table public."Link";
+drop table public."Folder";
+drop table public."Tag";
+drop table public."User";
