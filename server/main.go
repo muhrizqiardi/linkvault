@@ -42,6 +42,7 @@ func main() {
 
 	userHandler := handlers.NewUserHandler(ctx, l, pg)
 	r.Get("/users", userHandler.GetManyUser)
+	r.Post("/users", userHandler.CreateUser)
 
 	http.ListenAndServe(":9000", r)
 }
