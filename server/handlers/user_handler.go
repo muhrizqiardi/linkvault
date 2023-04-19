@@ -144,3 +144,28 @@ func (uh *UserHandler) UpdateOneUserById(w http.ResponseWriter, r *http.Request)
 
 	return
 }
+
+func (uh *UserHandler) DeleteOneUserById(w http.ResponseWriter, r *http.Request) {
+	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
+	if paramErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		uh.l.Println(paramErr)
+		return
+	}
+
+	if dbErr := uh.q.DeleteOneUserById(uh.ctx, userId); dbErr != nil {
+		w.WriteHeader(http.StatusNotFound)
+		uh.l.Println(dbErr)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	if encErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse(true, "User deleted", nil)); encErr != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		uh.l.Println(encErr)
+		return
+	}
+
+	return
+}
