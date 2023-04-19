@@ -3,7 +3,10 @@ lockfileVersion: 5.4
 importers:
 
   .:
-    specifiers: {}
+    specifiers:
+      dbmate: ^2.2.0
+    devDependencies:
+      dbmate: 2.2.0
 
   web:
     specifiers:
@@ -45,6 +48,62 @@ packages:
     dependencies:
       regenerator-runtime: 0.13.11
     dev: false
+
+  /@dbmate/darwin-arm64/2.2.0:
+    resolution: {integrity: sha512-9OiQJt1QO7iVW/GeadwKO6gYoCSMszbVw/IIjHwLUvzM0OG/Xmvo/OvYRxgEuP04tfP4axGl/FGlE/1ZCiGaKw==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@dbmate/darwin-x64/2.2.0:
+    resolution: {integrity: sha512-DaowT2a/w+Gt+CXBbxBQRxRqkWMZIZ9+t453O9HLcEBPnfVzYkgBsahdOg48N6aZymzc04mD3bsJ3BW6S/JF6w==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@dbmate/linux-arm/2.2.0:
+    resolution: {integrity: sha512-SaDGK9inahNtuMIqNXJCuRENmavWVa3iGZZqPkec96+sO1HD42V1I8BHVqWS/Ck+X8oa7NhEUiAWmXkkSyaTPg==}
+    cpu: [arm]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@dbmate/linux-arm64/2.2.0:
+    resolution: {integrity: sha512-gTFQ/rpdC0zRWWIY628WeD9hjqp4jgquW8zAAr+yWdifazDVrgu/PVbex/0PYXq9FsjflTfINkIqEaAU4LxKBg==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@dbmate/linux-ia32/2.2.0:
+    resolution: {integrity: sha512-yXCDbqb2wFK3sE2CQzBnje6xg7DwOamAzG8SFa9L3nDieTNAlMtuSSpWo8jLOeQkJuhjTBNg9lQSe+KXdzJlKw==}
+    cpu: [ia32]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@dbmate/linux-x64/2.2.0:
+    resolution: {integrity: sha512-9k7HxakeQBCVS7WghaItlXGT5lYlithvN2iqh2L/HsCEtSwKTNA91JN7hpD5u/oUaR3IC33sAIsBrUwh0LI6Vg==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@dbmate/win32-x64/2.2.0:
+    resolution: {integrity: sha512-kVcWneWiBGHbBGnt2hjDVfuqvM0YcupK69vXAGsZLc2PIa1WzfNIeOTNCnl3mdoMHFGGptJrtnDW9SH70iCxGg==}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
 
   /@eslint-community/eslint-utils/4.4.0_eslint@8.38.0:
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
@@ -682,6 +741,19 @@ packages:
   /damerau-levenshtein/1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
     dev: false
+
+  /dbmate/2.2.0:
+    resolution: {integrity: sha512-yIwGqDd3Ik19yvvc/CjWPioByhwwvMlJwidwkyfsCpVtVfhEph83aGgicdFswJr+u115FQv365rcHF0zY0ZBKg==}
+    hasBin: true
+    optionalDependencies:
+      '@dbmate/darwin-arm64': 2.2.0
+      '@dbmate/darwin-x64': 2.2.0
+      '@dbmate/linux-arm': 2.2.0
+      '@dbmate/linux-arm64': 2.2.0
+      '@dbmate/linux-ia32': 2.2.0
+      '@dbmate/linux-x64': 2.2.0
+      '@dbmate/win32-x64': 2.2.0
+    dev: true
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
