@@ -7,6 +7,11 @@ import (
 	"log"
 	"net/http"
 	"server/db"
+	"server/utils"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/render"
+	"github.com/google/uuid"
 )
 
 type UserHandler struct {
@@ -67,4 +72,28 @@ func (uh *UserHandler) GetManyUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(jsonInBytes))
+}
+
+func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
+	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
+	if paramErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		uh.l.Println(paramErr)
+		return
+	}
+
+	user, dbErr := uh.q.GetOneUserById(uh.ctx, userId)
+	if dbErr != nil {
+		w.WriteHeader(http.StatusNotFound)
+		uh.l.Println(dbErr)
+		return
+	}
+
+	render.JSON(w, r, utils.CreateBaseResponse(
+		true,
+		"User found",
+		user,
+	))
+
+	return
 }
