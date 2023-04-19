@@ -24,6 +24,7 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+	r.Use(middleware.AllowContentType("application/json"))
 
 	connstring := fmt.Sprintf(
 		"user='%s' password='%s' dbname='%s' host='%s' sslmode='disable'",
@@ -43,6 +44,7 @@ func main() {
 	userHandler := handlers.NewUserHandler(ctx, l, pg)
 	r.Get("/users", userHandler.GetManyUser)
 	r.Post("/users", userHandler.CreateUser)
+	r.Get("/users/{userId}", userHandler.GetOneUserById)
 
 	http.ListenAndServe(":9000", r)
 }
