@@ -17,3 +17,5 @@ update public.users
     where 
         id = $1;
         
+-- name: DeleteOneUserById :exec
+delete from public.users where id = $1;
