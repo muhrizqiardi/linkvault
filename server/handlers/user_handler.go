@@ -107,3 +107,40 @@ func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
 
 	return
 }
+
+func (uh *UserHandler) UpdateOneUserById(w http.ResponseWriter, r *http.Request) {
+	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
+	if paramErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		uh.l.Println(paramErr)
+		return
+	}
+
+	var payload db.UpdateOneUserByIdParams
+	if decErr := json.NewDecoder(r.Body).Decode(&payload); decErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		uh.l.Println(decErr)
+		return
+	}
+
+	if dbErr := uh.q.UpdateOneUserById(uh.ctx, db.UpdateOneUserByIdParams{
+		ID:       userId,
+		Email:    payload.Email,
+		Password: payload.Password,
+		FullName: payload.FullName,
+	}); dbErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		uh.l.Println(dbErr)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	if encodeErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse(true, "User updated", nil)); encodeErr != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		uh.l.Println(encodeErr)
+		return
+	}
+
+	return
+}
