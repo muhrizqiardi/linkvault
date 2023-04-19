@@ -46,6 +46,7 @@ func main() {
 	r.Post("/users", userHandler.CreateUser)
 	r.Get("/users/{userId}", userHandler.GetOneUserById)
 	r.Patch("/users/{userId}", userHandler.UpdateOneUserById)
+	r.Delete("/users/{userId}", userHandler.DeleteOneUserById)
 
 	http.ListenAndServe(":9000", r)
 }
