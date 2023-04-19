@@ -1,2 +1,2 @@
 -- name: GetUsers :many
-select * from public."User";
+select * from public.users;
