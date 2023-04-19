@@ -25,6 +25,32 @@ func NewUserHandler(ctx context.Context, l *log.Logger, pg *sql.DB) *UserHandler
 	}
 }
 
+func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
+	var newUser db.CreateUserParams
+	if err := json.NewDecoder(r.Body).Decode(&newUser); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if dbErr := uh.q.CreateUser(uh.ctx, newUser); dbErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		uh.l.Println(dbErr)
+		return
+	}
+
+	jsonInBytes, jsonErr := json.Marshal(map[string]any{
+		"success": true,
+		"message": "Successfully created User",
+	})
+	if jsonErr != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(jsonInBytes))
+}
+
 func (uh *UserHandler) GetManyUser(w http.ResponseWriter, r *http.Request) {
 	users, dbErr := uh.q.GetUsers(uh.ctx)
 	if dbErr != nil {
@@ -39,6 +65,6 @@ func (uh *UserHandler) GetManyUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(jsonInBytes))
 }
