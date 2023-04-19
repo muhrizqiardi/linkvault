@@ -9,6 +9,21 @@ import (
 	"context"
 )
 
+const createUser = `-- name: CreateUser :exec
+insert into public.users (email, full_name, password) values ($1, $2, $3)
+`
+
+type CreateUserParams struct {
+	Email    string `json:"email"`
+	FullName string `json:"full_name"`
+	Password string `json:"password"`
+}
+
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
+	_, err := q.db.ExecContext(ctx, createUser, arg.Email, arg.FullName, arg.Password)
+	return err
+}
+
 const getUsers = `-- name: GetUsers :many
 select id, email, full_name, password from public.users
 `
