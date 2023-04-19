@@ -10,7 +10,7 @@ import (
 )
 
 const getUsers = `-- name: GetUsers :many
-select id, email, fullname, password from public."User"
+select id, email, full_name, password from public.users
 `
 
 func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
@@ -25,7 +25,7 @@ func (q *Queries) GetUsers(ctx context.Context) ([]User, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.Email,
-			&i.Fullname,
+			&i.FullName,
 			&i.Password,
 		); err != nil {
 			return nil, err

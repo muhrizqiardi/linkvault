@@ -10,42 +10,46 @@ import (
 
 type File struct {
 	ID      uuid.UUID `json:"id"`
-	Linkid  uuid.UUID `json:"linkid"`
-	Fileurl string    `json:"fileurl"`
-	Ownerid uuid.UUID `json:"ownerid"`
+	LinkID  uuid.UUID `json:"link_id"`
+	FileUrl string    `json:"file_url"`
+	OwnerID uuid.UUID `json:"owner_id"`
 }
 
 type Folder struct {
 	ID      uuid.UUID `json:"id"`
 	Name    string    `json:"name"`
-	Ownerid uuid.UUID `json:"ownerid"`
+	OwnerID uuid.UUID `json:"owner_id"`
 }
 
 type Link struct {
 	ID       uuid.UUID `json:"id"`
 	Url      string    `json:"url"`
 	Excerpt  string    `json:"excerpt"`
-	Coverurl string    `json:"coverurl"`
-	Ownerid  uuid.UUID `json:"ownerid"`
-	Folderid uuid.UUID `json:"folderid"`
+	CoverUrl string    `json:"cover_url"`
+	OwnerID  uuid.UUID `json:"owner_id"`
+	FolderID uuid.UUID `json:"folder_id"`
 }
 
-type LinkMedium struct {
+type LinkMedia struct {
 	ID       uuid.UUID `json:"id"`
-	Linkid   uuid.UUID `json:"linkid"`
-	Mediaurl string    `json:"mediaurl"`
-	Ownerid  uuid.UUID `json:"ownerid"`
+	LinkID   uuid.UUID `json:"link_id"`
+	MediaUrl string    `json:"media_url"`
+	OwnerID  uuid.UUID `json:"owner_id"`
+}
+
+type SchemaMigration struct {
+	Version string `json:"version"`
 }
 
 type Tag struct {
 	ID      uuid.UUID `json:"id"`
 	Name    string    `json:"name"`
-	Ownerid uuid.UUID `json:"ownerid"`
+	OwnerID uuid.UUID `json:"owner_id"`
 }
 
 type User struct {
 	ID       uuid.UUID `json:"id"`
 	Email    string    `json:"email"`
-	Fullname string    `json:"fullname"`
+	FullName string    `json:"full_name"`
 	Password string    `json:"password"`
 }
