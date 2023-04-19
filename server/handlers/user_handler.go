@@ -51,7 +51,9 @@ func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 			nil,
 		),
 	); encodeErr != nil {
-
+		w.WriteHeader(http.StatusInternalServerError)
+		uh.l.Println(encodeErr)
+		return
 	}
 }
 
