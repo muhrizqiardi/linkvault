@@ -1,0 +1,31 @@
+basePath: /
+definitions:
+  db.User:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+    type: object
+host: localhost:9000
+info:
+  contact: {}
+  description: Docs for LinkVault API
+  title: LinkVault API
+  version: "1.0"
+paths:
+  /users:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.User'
+      summary: Create user
+swagger: "2.0"

@@ -13,8 +13,15 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/swaggo/http-swagger"
+	_ "server/docs"
 )
 
+// @title LinkVault API
+// @version 1.0
+// @description Docs for LinkVault API
+// @host localhost:9000
+// @BasePath /
 func main() {
 	l := log.New(os.Stdout, "server ", log.LstdFlags)
 
@@ -40,6 +47,8 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.AllowContentType("application/json"))
+
+	r.Get("/docs/*", httpSwagger.WrapHandler)
 
 	userHandler := handlers.NewUserHandler(ctx, l, pg)
 	r.Get("/users", userHandler.GetManyUser)

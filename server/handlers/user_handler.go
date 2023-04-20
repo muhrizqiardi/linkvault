@@ -29,6 +29,10 @@ func NewUserHandler(ctx context.Context, l *log.Logger, pg *sql.DB) *UserHandler
 	}
 }
 
+// @Router /users [post]
+// @Summary Create user
+// @Produce json
+// @Success 200 {object} db.User
 func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var newUser db.CreateUserParams
 	if err := json.NewDecoder(r.Body).Decode(&newUser); err != nil {
