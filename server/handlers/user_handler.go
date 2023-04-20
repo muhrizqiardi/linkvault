@@ -42,7 +42,18 @@ func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if dbErr := uh.q.CreateUser(uh.ctx, newUser); dbErr != nil {
+	hashedPassword, pwErr := utils.HashPassword(newUser.Password)
+	if pwErr != nil {
+		http.Error(w, "Failed hashing password", http.StatusInternalServerError)
+	}
+
+	if dbErr := uh.q.CreateUser(uh.ctx,
+		db.CreateUserParams{
+			Email:    newUser.Email,
+			FullName: newUser.FullName,
+			Password: hashedPassword,
+		},
+	); dbErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		uh.l.Println(dbErr)
 		return
