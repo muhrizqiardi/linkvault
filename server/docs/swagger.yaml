@@ -1,5 +1,14 @@
 basePath: /
 definitions:
+  db.CreateUserParams:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        type: string
+    type: object
   db.User:
     properties:
       email:
@@ -11,6 +20,34 @@ definitions:
       password:
         type: string
     type: object
+  utils.BaseResponse-any:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  utils.BaseResponse-array_db_User:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/db.User'
+        type: array
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  utils.BaseResponse-db_User:
+    properties:
+      data:
+        $ref: '#/definitions/db.User'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
 host: localhost:9000
 info:
   contact: {}
@@ -19,13 +56,85 @@ info:
   version: "1.0"
 paths:
   /users:
-    post:
+    get:
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/db.User'
+            $ref: '#/definitions/utils.BaseResponse-array_db_User'
+      summary: Get many users
+      tags:
+      - users
+    post:
+      parameters:
+      - description: create user param
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/db.CreateUserParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
       summary: Create user
+      tags:
+      - users
+  /users/{userId}:
+    delete:
+      parameters:
+      - description: User id
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-db_User'
+      summary: Delete one user by ID
+      tags:
+      - users
+    get:
+      parameters:
+      - description: User id
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-db_User'
+      summary: Get one user by ID
+      tags:
+      - users
+    put:
+      parameters:
+      - description: User id
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-db_User'
+      summary: Update one user by ID
+      tags:
+      - users
 swagger: "2.0"

@@ -17,11 +17,11 @@ import (
 	_ "server/docs"
 )
 
-// @title LinkVault API
-// @version 1.0
-// @description Docs for LinkVault API
-// @host localhost:9000
-// @BasePath /
+//	@title			LinkVault API
+//	@version		1.0
+//	@description	Docs for LinkVault API
+//	@host			localhost:9000
+//	@BasePath		/
 func main() {
 	l := log.New(os.Stdout, "server ", log.LstdFlags)
 

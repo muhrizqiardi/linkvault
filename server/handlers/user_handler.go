@@ -29,10 +29,12 @@ func NewUserHandler(ctx context.Context, l *log.Logger, pg *sql.DB) *UserHandler
 	}
 }
 
-// @Router /users [post]
-// @Summary Create user
-// @Produce json
-// @Success 200 {object} db.User
+//	@Router		/users [post]
+//	@Tags		users
+//	@Summary	Create user
+//	@Produce	json
+//	@Param		data	body		db.CreateUserParams	true	"create user param"
+//	@Success	200		{object}	utils.BaseResponse[any]
 func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var newUser db.CreateUserParams
 	if err := json.NewDecoder(r.Body).Decode(&newUser); err != nil {
@@ -49,7 +51,7 @@ func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	if encodeErr := json.NewEncoder(w).Encode(
-		utils.CreateBaseResponse(
+		utils.CreateBaseResponse[any](
 			true,
 			"User created",
 			nil,
@@ -61,6 +63,11 @@ func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//	@Router		/users [get]
+//	@Tags		users
+//	@Summary	Get many users
+//	@Produce	json
+//	@Success	200	{object}	utils.BaseResponse[[]db.User]
 func (uh *UserHandler) GetManyUser(w http.ResponseWriter, r *http.Request) {
 	users, dbErr := uh.q.GetUsers(uh.ctx)
 	if dbErr != nil {
@@ -84,6 +91,12 @@ func (uh *UserHandler) GetManyUser(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+//	@Summary	Get one user by ID
+//	@Tags		users
+//	@Param		userId	path	string	true	"User id"
+//	@Produce	json
+//	@Success	200	{object}	utils.BaseResponse[db.User]
+//	@Router		/users/{userId} [get]
 func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
 	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
 	if paramErr != nil {
@@ -114,6 +127,12 @@ func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+//	@Summary	Update one user by ID
+//	@Tags		users
+//	@Param		userId	path	string	true	"User id"
+//	@Produce	json
+//	@Success	200	{object}	utils.BaseResponse[db.User]
+//	@Router		/users/{userId} [put]
 func (uh *UserHandler) UpdateOneUserById(w http.ResponseWriter, r *http.Request) {
 	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
 	if paramErr != nil {
@@ -142,7 +161,7 @@ func (uh *UserHandler) UpdateOneUserById(w http.ResponseWriter, r *http.Request)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	if encodeErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse(true, "User updated", nil)); encodeErr != nil {
+	if encodeErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](true, "User updated", nil)); encodeErr != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		uh.l.Println(encodeErr)
 		return
@@ -151,6 +170,12 @@ func (uh *UserHandler) UpdateOneUserById(w http.ResponseWriter, r *http.Request)
 	return
 }
 
+//	@Summary	Delete one user by ID
+//	@Tags		users
+//	@Param		userId	path	string	true	"User id"
+//	@Produce	json
+//	@Success	200	{object}	utils.BaseResponse[db.User]
+//	@Router		/users/{userId} [delete]
 func (uh *UserHandler) DeleteOneUserById(w http.ResponseWriter, r *http.Request) {
 	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
 	if paramErr != nil {
@@ -167,7 +192,7 @@ func (uh *UserHandler) DeleteOneUserById(w http.ResponseWriter, r *http.Request)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	if encErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse(true, "User deleted", nil)); encErr != nil {
+	if encErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](true, "User deleted", nil)); encErr != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		uh.l.Println(encErr)
 		return

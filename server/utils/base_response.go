@@ -1,13 +1,13 @@
 package utils
 
-type BaseResponse struct {
+type BaseResponse[T any] struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
-	Data    any    `json:"data,omitempty"`
+	Data    T      `json:"data,omitempty"`
 }
 
-func CreateBaseResponse(success bool, message string, data any) BaseResponse {
-	return BaseResponse{
+func CreateBaseResponse[T any](success bool, message string, data T) BaseResponse[T] {
+	return BaseResponse[T]{
 		Success: success,
 		Message: message,
 		Data:    data,
