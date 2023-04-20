@@ -57,5 +57,8 @@ func main() {
 	r.Patch("/users/{userId}", userHandler.UpdateOneUserById)
 	r.Delete("/users/{userId}", userHandler.DeleteOneUserById)
 
+	authHandler := handlers.NewAuthHandler(ctx, l, pg)
+	r.Post("/auth", authHandler.Login)
+
 	http.ListenAndServe(":9000", r)
 }
