@@ -8,6 +8,10 @@ insert into public.users (email, full_name, password) values ($1, $2, $3);
 select * from public.users 
     where id = $1;
 
+-- name: GetOneUserByEmail :one
+select * from public.users 
+    where email = $1;
+
 -- name: UpdateOneUserById :exec
 update public.users
     set 
