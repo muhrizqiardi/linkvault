@@ -16,6 +16,36 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Log in to user account",
+                "parameters": [
+                    {
+                        "description": "Login params",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.LoginParams"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-string"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "produces": [
@@ -176,6 +206,17 @@ const docTemplate = `{
                 }
             }
         },
+        "handlers.LoginParams": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "utils.BaseResponse-any": {
             "type": "object",
             "properties": {
@@ -210,6 +251,20 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/db.User"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "utils.BaseResponse-string": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "string"
                 },
                 "message": {
                     "type": "string"

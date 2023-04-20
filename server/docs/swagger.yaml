@@ -20,6 +20,13 @@ definitions:
       password:
         type: string
     type: object
+  handlers.LoginParams:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
   utils.BaseResponse-any:
     properties:
       data: {}
@@ -48,6 +55,15 @@ definitions:
       success:
         type: boolean
     type: object
+  utils.BaseResponse-string:
+    properties:
+      data:
+        type: string
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
 host: localhost:9000
 info:
   contact: {}
@@ -55,6 +71,25 @@ info:
   title: LinkVault API
   version: "1.0"
 paths:
+  /auth:
+    post:
+      parameters:
+      - description: Login params
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-string'
+      summary: Log in to user account
+      tags:
+      - auth
   /users:
     get:
       produces:
