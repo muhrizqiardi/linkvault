@@ -69,7 +69,7 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	claims := &Claims{
+	claims := Claims{
 		Username: param.Email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(EXPIRATION_TIME),
@@ -77,7 +77,7 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, signErr := token.SignedString(os.Getenv("JWT_SECRET"))
+	tokenString, signErr := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if signErr != nil {
 		http.Error(w, signErr.Error(), http.StatusInternalServerError)
 		ah.l.Println(signErr.Error())
