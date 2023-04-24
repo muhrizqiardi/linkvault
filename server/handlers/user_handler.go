@@ -117,6 +117,13 @@ func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userClaim, ok := r.Context().Value("user").(*Claims)
+	if !ok && userClaim.UserId != userId.String() {
+		w.WriteHeader(http.StatusBadRequest)
+		uh.l.Println("Unauthorized")
+		return
+	}
+
 	user, dbErr := uh.q.GetOneUserById(uh.ctx, userId)
 	if dbErr != nil {
 		w.WriteHeader(http.StatusNotFound)
