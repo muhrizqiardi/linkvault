@@ -8,20 +8,25 @@ import (
 	"net/http"
 	"os"
 	"server/handlers"
+	"server/middlewares"
+
+	_ "server/docs"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/swaggo/http-swagger"
-	_ "server/docs"
 )
 
-//	@title			LinkVault API
-//	@version		1.0
-//	@description	Docs for LinkVault API
-//	@host			localhost:9000
-//	@BasePath		/
+//	@title						LinkVault API
+//	@version					1.0
+//	@description				Docs for LinkVault API
+//	@host						localhost:9000
+//	@BasePath					/
+//	@securityDefinitions.apikey	Bearer
+//	@in							header
+//	@name						Authorization
 func main() {
 	l := log.New(os.Stdout, "server ", log.LstdFlags)
 
@@ -51,14 +56,23 @@ func main() {
 	r.Get("/docs/*", httpSwagger.WrapHandler)
 
 	userHandler := handlers.NewUserHandler(ctx, l, pg)
-	r.Get("/users", userHandler.GetManyUser)
-	r.Post("/users", userHandler.CreateUser)
-	r.Get("/users/{userId}", userHandler.GetOneUserById)
-	r.Patch("/users/{userId}", userHandler.UpdateOneUserById)
-	r.Delete("/users/{userId}", userHandler.DeleteOneUserById)
-
 	authHandler := handlers.NewAuthHandler(ctx, l, pg)
-	r.Post("/auth", authHandler.Login)
 
+	// Public
+	r.Group(func(r chi.Router) {
+		r.Post("/auth", authHandler.Login)
+
+		r.Get("/users", userHandler.GetManyUser)
+		r.Post("/users", userHandler.CreateUser)
+	})
+
+	// Protected
+	r.Group(func(r chi.Router) {
+		r.Use(middlewares.JwtAuth(ctx, l, pg))
+
+		r.Get("/users/{userId}", userHandler.GetOneUserById)
+		r.Patch("/users/{userId}", userHandler.UpdateOneUserById)
+		r.Delete("/users/{userId}", userHandler.DeleteOneUserById)
+	})
 	http.ListenAndServe(":9000", r)
 }
