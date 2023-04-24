@@ -108,6 +108,7 @@ func (uh *UserHandler) GetManyUser(w http.ResponseWriter, r *http.Request) {
 //	@Produce	json
 //	@Success	200	{object}	utils.BaseResponse[db.User]
 //	@Router		/users/{userId} [get]
+//	@Security	Bearer
 func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
 	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
 	if paramErr != nil {
@@ -144,6 +145,7 @@ func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
 //	@Produce	json
 //	@Success	200	{object}	utils.BaseResponse[db.User]
 //	@Router		/users/{userId} [put]
+//	@Security	Bearer
 func (uh *UserHandler) UpdateOneUserById(w http.ResponseWriter, r *http.Request) {
 	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
 	if paramErr != nil {
@@ -187,6 +189,7 @@ func (uh *UserHandler) UpdateOneUserById(w http.ResponseWriter, r *http.Request)
 //	@Produce	json
 //	@Success	200	{object}	utils.BaseResponse[db.User]
 //	@Router		/users/{userId} [delete]
+//	@Security	Bearer
 func (uh *UserHandler) DeleteOneUserById(w http.ResponseWriter, r *http.Request) {
 	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
 	if paramErr != nil {
