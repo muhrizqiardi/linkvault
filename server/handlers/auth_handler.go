@@ -38,7 +38,8 @@ type LoginParams struct {
 }
 
 type Claims struct {
-	Username string `json:"username"`
+	Email  string `json:"email"`
+	UserId string `json:"userId"`
 	jwt.RegisteredClaims
 }
 
@@ -70,7 +71,8 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	claims := Claims{
-		Username: param.Email,
+		Email:  param.Email,
+		UserId: user.ID.String(),
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(EXPIRATION_TIME),
 		},
