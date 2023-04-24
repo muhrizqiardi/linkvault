@@ -135,6 +135,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/utils.BaseResponse-db_User'
+      security:
+      - Bearer: []
       summary: Delete one user by ID
       tags:
       - users
@@ -152,6 +154,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/utils.BaseResponse-db_User'
+      security:
+      - Bearer: []
       summary: Get one user by ID
       tags:
       - users
@@ -169,7 +173,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/utils.BaseResponse-db_User'
+      security:
+      - Bearer: []
       summary: Update one user by ID
       tags:
       - users
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
