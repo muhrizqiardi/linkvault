@@ -161,6 +161,13 @@ func (uh *UserHandler) UpdateOneUserById(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	userClaim, ok := r.Context().Value("user").(*Claims)
+	if !ok && userClaim.UserId != userId.String() {
+		w.WriteHeader(http.StatusBadRequest)
+		uh.l.Println("Unauthorized")
+		return
+	}
+
 	var payload db.UpdateOneUserByIdParams
 	if decErr := json.NewDecoder(r.Body).Decode(&payload); decErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -202,6 +209,13 @@ func (uh *UserHandler) DeleteOneUserById(w http.ResponseWriter, r *http.Request)
 	if paramErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		uh.l.Println(paramErr)
+		return
+	}
+
+	userClaim, ok := r.Context().Value("user").(*Claims)
+	if !ok && userClaim.UserId != userId.String() {
+		w.WriteHeader(http.StatusBadRequest)
+		uh.l.Println("Unauthorized")
 		return
 	}
 
