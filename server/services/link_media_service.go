@@ -45,7 +45,22 @@ func (lms *LinkMediaService) Create(payload dtos.CreateLinkMediaDto) (entities.L
 	return newLinkMedia, nil
 }
 
-func (lms *LinkMediaService) GetMany() (entities.LinkMediaEntity, error)
+func (lms *LinkMediaService) GetMany() ([]entities.LinkMediaEntity, error) {
+	getManyLinkMedias := `
+		select id, link_id, media_url, owner_id, created_at, updated_at
+			from public.link_medias;	
+	`
+
+	var linkMedias []entities.LinkMediaEntity
+	if err := lms.pg.Select(
+		&linkMedias,
+		getManyLinkMedias,
+	); err != nil {
+		return []entities.LinkMediaEntity{}, err
+	}
+
+	return linkMedias, nil
+}
 
 func (lms *LinkMediaService) GetOne(linkMediaId uuid.UUID) (entities.LinkMediaEntity, error)
 
