@@ -81,6 +81,31 @@ func (lms *LinkMediaService) GetOne(linkMediaId uuid.UUID) (entities.LinkMediaEn
 	return linkMedia, nil
 }
 
-func (lms *LinkMediaService) UpdateOne(linkMediaId uuid.UUID, payload dtos.UpdateLinkMediaDto) (entities.LinkMediaEntity, error)
+func (lms *LinkMediaService) UpdateOne(linkMediaId uuid.UUID, payload dtos.UpdateLinkMediaDto) (entities.LinkMediaEntity, error) {
+	updateOneLinkMediaQuery := `
+		update public.link_medias
+			set
+				link_id = coalesce($2, link_id),
+				media_url = coalesce($3, media_url),
+				owner_id = coalesce($4, owner_id),
+				updated_at = current_timestamp
+			where 
+				id = $1;
+	`
+
+	var updatedLinkMedia entities.LinkMediaEntity
+	if err := lms.pg.Select(
+		&updatedLinkMedia,
+		updateOneLinkMediaQuery,
+		linkMediaId.String(),
+		payload.LinkId,
+		payload.MediaUrl,
+		payload.OwnerId,
+	); err != nil {
+		return entities.LinkMediaEntity{}, err
+	}
+
+	return updatedLinkMedia, nil
+}
 
 func (lms *LinkMediaService) DeleteOne(linkMediaId uuid.UUID) (entities.LinkMediaEntity, error)
