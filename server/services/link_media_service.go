@@ -28,7 +28,7 @@ func (lms *LinkMediaService) Create(payload dtos.CreateLinkMediaDto) (entities.L
 	createLinkMediaQuery := `
 		insert into public.link_medias (link_id, media_url, owner_id)
 			value ($1, $2, $3)
-			returning (id, link_id, media_url, owner_id, created_at, updated_at);
+			returning id, link_id, media_url, owner_id, created_at, updated_at;
 	`
 
 	var newLinkMedia entities.LinkMediaEntity
@@ -108,4 +108,21 @@ func (lms *LinkMediaService) UpdateOne(linkMediaId uuid.UUID, payload dtos.Updat
 	return updatedLinkMedia, nil
 }
 
-func (lms *LinkMediaService) DeleteOne(linkMediaId uuid.UUID) (entities.LinkMediaEntity, error)
+func (lms *LinkMediaService) DeleteOne(linkMediaId uuid.UUID) (entities.LinkMediaEntity, error) {
+	deleteOneLinkMediaQuery := `
+		delete from public.link_medias
+			where id = $1
+			returning id, link_id, media_url, owner_id, created_at, updated_at;
+	`
+
+	var deletedLinkMedia entities.LinkMediaEntity
+	if err := lms.pg.Select(
+		&deletedLinkMedia,
+		deleteOneLinkMediaQuery,
+		linkMediaId,
+	); err != nil {
+		return entities.LinkMediaEntity{}, err
+	}
+
+	return deletedLinkMedia, nil
+}
