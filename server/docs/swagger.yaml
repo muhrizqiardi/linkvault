@@ -1,55 +1,57 @@
 basePath: /
 definitions:
-  db.CreateUserParams:
+  dtos.AuthLoginDto:
     properties:
       email:
+        format: email
+        type: string
+      password:
+        minLength: 8
+        type: string
+    type: object
+  dtos.CreateUserDto:
+    properties:
+      email:
+        format: email
         type: string
       full_name:
         type: string
       password:
+        minLength: 8
         type: string
     type: object
-  db.User:
+  entities.UserEntity:
     properties:
+      created_at:
+        format: date-time
+        type: string
       email:
+        format: email
         type: string
       full_name:
         type: string
       id:
+        format: uuid
         type: string
-      password:
-        type: string
-    type: object
-  handlers.LoginParams:
-    properties:
-      email:
-        type: string
-      password:
+      updated_at:
+        format: date-time
         type: string
     type: object
-  utils.BaseResponse-any:
-    properties:
-      data: {}
-      message:
-        type: string
-      success:
-        type: boolean
-    type: object
-  utils.BaseResponse-array_db_User:
+  utils.BaseResponse-array_entities_UserEntity:
     properties:
       data:
         items:
-          $ref: '#/definitions/db.User'
+          $ref: '#/definitions/entities.UserEntity'
         type: array
       message:
         type: string
       success:
         type: boolean
     type: object
-  utils.BaseResponse-db_User:
+  utils.BaseResponse-entities_UserEntity:
     properties:
       data:
-        $ref: '#/definitions/db.User'
+        $ref: '#/definitions/entities.UserEntity'
       message:
         type: string
       success:
@@ -79,7 +81,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/handlers.LoginParams'
+          $ref: '#/definitions/dtos.AuthLoginDto'
       produces:
       - application/json
       responses:
@@ -98,7 +100,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/utils.BaseResponse-array_db_User'
+            $ref: '#/definitions/utils.BaseResponse-array_entities_UserEntity'
       summary: Get many users
       tags:
       - users
@@ -109,14 +111,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/db.CreateUserParams'
+          $ref: '#/definitions/dtos.CreateUserDto'
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
-            $ref: '#/definitions/utils.BaseResponse-any'
+            $ref: '#/definitions/utils.BaseResponse-entities_UserEntity'
       summary: Create user
       tags:
       - users
@@ -134,7 +136,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/utils.BaseResponse-db_User'
+            $ref: '#/definitions/utils.BaseResponse-entities_UserEntity'
       security:
       - Bearer: []
       summary: Delete one user by ID
@@ -153,26 +155,32 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/utils.BaseResponse-db_User'
+            $ref: '#/definitions/utils.BaseResponse-entities_UserEntity'
       security:
       - Bearer: []
       summary: Get one user by ID
       tags:
       - users
-    put:
+    patch:
       parameters:
       - description: User id
         in: path
         name: userId
         required: true
         type: string
+      - description: create user param
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateUserDto'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/utils.BaseResponse-db_User'
+            $ref: '#/definitions/utils.BaseResponse-entities_UserEntity'
       security:
       - Bearer: []
       summary: Update one user by ID

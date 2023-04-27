@@ -32,7 +32,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.LoginParams"
+                            "$ref": "#/definitions/dtos.AuthLoginDto"
                         }
                     }
                 ],
@@ -59,7 +59,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/utils.BaseResponse-array_db_User"
+                            "$ref": "#/definitions/utils.BaseResponse-array_entities_UserEntity"
                         }
                     }
                 }
@@ -79,15 +79,15 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/db.CreateUserParams"
+                            "$ref": "#/definitions/dtos.CreateUserDto"
                         }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/utils.BaseResponse-any"
+                            "$ref": "#/definitions/utils.BaseResponse-entities_UserEntity"
                         }
                     }
                 }
@@ -120,38 +120,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/utils.BaseResponse-db_User"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Update one user by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User id",
-                        "name": "userId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/utils.BaseResponse-db_User"
+                            "$ref": "#/definitions/utils.BaseResponse-entities_UserEntity"
                         }
                     }
                 }
@@ -182,7 +151,47 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/utils.BaseResponse-db_User"
+                            "$ref": "#/definitions/utils.BaseResponse-entities_UserEntity"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update one user by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User id",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "create user param",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.CreateUserDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-entities_UserEntity"
                         }
                     }
                 }
@@ -190,67 +199,66 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "db.CreateUserParams": {
+        "dtos.AuthLoginDto": {
             "type": "object",
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "email"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 8
+                }
+            }
+        },
+        "dtos.CreateUserDto": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "format": "email"
                 },
                 "full_name": {
                     "type": "string"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 8
                 }
             }
         },
-        "db.User": {
+        "entities.UserEntity": {
             "type": "object",
             "properties": {
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "email"
                 },
                 "full_name": {
                     "type": "string"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "uuid"
                 },
-                "password": {
-                    "type": "string"
+                "updated_at": {
+                    "type": "string",
+                    "format": "date-time"
                 }
             }
         },
-        "handlers.LoginParams": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "utils.BaseResponse-any": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "utils.BaseResponse-array_db_User": {
+        "utils.BaseResponse-array_entities_UserEntity": {
             "type": "object",
             "properties": {
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/db.User"
+                        "$ref": "#/definitions/entities.UserEntity"
                     }
                 },
                 "message": {
@@ -261,11 +269,11 @@ const docTemplate = `{
                 }
             }
         },
-        "utils.BaseResponse-db_User": {
+        "utils.BaseResponse-entities_UserEntity": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/db.User"
+                    "$ref": "#/definitions/entities.UserEntity"
                 },
                 "message": {
                     "type": "string"
