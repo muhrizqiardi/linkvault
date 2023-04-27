@@ -108,7 +108,7 @@ func (ts *TagService) UpdateOne(tagId uuid.UUID, payload dtos.UpdateTagDto) (ent
 func (ts *TagService) DeleteOne(tagId uuid.UUID) (entities.TagEntity, error) {
 	deleteOneTagQuery := `
 		delete from public.tags
-			where id = $1
+			where id = $1;
 	`
 
 	var deletedTag entities.TagEntity
