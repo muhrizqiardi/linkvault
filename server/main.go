@@ -28,7 +28,7 @@ import (
 //	@in							header
 //	@name						Authorization
 func main() {
-	l := log.New(os.Stdout, "server ", log.LstdFlags)
+	l := log.New(os.Stdout, "", log.LstdFlags)
 
 	if err := godotenv.Load(); err != nil {
 		l.Fatalln("Failed loading .env file: ", err)
