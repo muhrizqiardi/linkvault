@@ -80,6 +80,29 @@ func (ts *TagService) GetOne(tagId uuid.UUID) (entities.TagEntity, error) {
 	return tag, nil
 }
 
-func (ts *TagService) UpdateOne(tagId uuid.UUID, payload dtos.UpdateTagDto) (entities.TagEntity, error)
+func (ts *TagService) UpdateOne(tagId uuid.UUID, payload dtos.UpdateTagDto) (entities.TagEntity, error) {
+	updateOneTagQuery := `
+		update public.tags
+			set 
+				name = coalesce($2, name),
+				link_id = coalesce($3, link_id),
+				owner_id = coalesce($4, owner_id)
+			where id = $1;
+	`
+
+	var updatedTag entities.TagEntity
+	if err := ts.pg.Select(
+		&updatedTag,
+		updateOneTagQuery,
+		tagId,
+		payload.Name,
+		payload.LinkId,
+		payload.OwnerId.String(),
+	); err != nil {
+		return entities.TagEntity{}, err
+	}
+
+	return updatedTag, nil
+}
 
 func (ts *TagService) DeleteOne(tagId uuid.UUID) (entities.TagEntity, error)
