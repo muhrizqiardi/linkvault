@@ -62,7 +62,24 @@ func (lms *LinkMediaService) GetMany() ([]entities.LinkMediaEntity, error) {
 	return linkMedias, nil
 }
 
-func (lms *LinkMediaService) GetOne(linkMediaId uuid.UUID) (entities.LinkMediaEntity, error)
+func (lms *LinkMediaService) GetOne(linkMediaId uuid.UUID) (entities.LinkMediaEntity, error) {
+	getOneLinkMediaQuery := `
+		select id, link_id, media_url, owner_id, created_at, updated_at
+			from public.link_medias
+			where id = $1;
+	`
+
+	var linkMedia entities.LinkMediaEntity
+	if err := lms.pg.Select(
+		&linkMedia,
+		getOneLinkMediaQuery,
+		linkMediaId.String(),
+	); err != nil {
+		return entities.LinkMediaEntity{}, err
+	}
+
+	return linkMedia, nil
+}
 
 func (lms *LinkMediaService) UpdateOne(linkMediaId uuid.UUID, payload dtos.UpdateLinkMediaDto) (entities.LinkMediaEntity, error)
 
