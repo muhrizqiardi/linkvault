@@ -7,7 +7,7 @@ type CreateUserDto struct {
 }
 
 type UpdateUserDto struct {
-	Email    string `json:"email" validation:"required,email" format:"email"`
-	Password string `json:"password" validation:"required,min=8" minLength:"8"`
-	FullName string `json:"full_name"`
+	Email    string `json:"email,omitempty" validation:"required,email" format:"email"`
+	Password string `json:"password,omitempty" validation:"required,min=8" minLength:"8"`
+	FullName string `json:"full_name,omitempty"`
 }
