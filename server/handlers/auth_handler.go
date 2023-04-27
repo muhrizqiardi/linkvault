@@ -37,12 +37,12 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-// @Summary	Log in to user account
-// @Tags		auth
-// @Produce	json
-// @Param		data	body		dtos.AuthLoginDto	true	"Login params"
-// @Success	200		{object}	utils.BaseResponse[string]
-// @Router		/auth [post]
+//	@Summary	Log in to user account
+//	@Tags		auth
+//	@Produce	json
+//	@Param		data	body		dtos.AuthLoginDto	true	"Login params"
+//	@Success	200		{object}	utils.BaseResponse[string]
+//	@Router		/auth [post]
 func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var param dtos.AuthLoginDto
 	if decErr := json.NewDecoder(r.Body).Decode(&param); decErr != nil {
