@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -12,15 +11,16 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 )
 
 type UserHandler struct {
 	ctx context.Context
 	l   *log.Logger
-	pg  *sql.DB
+	pg  *sqlx.DB
 }
 
-func NewUserHandler(ctx context.Context, l *log.Logger, pg *sql.DB) *UserHandler {
+func NewUserHandler(ctx context.Context, l *log.Logger, pg *sqlx.DB) *UserHandler {
 	return &UserHandler{
 		ctx,
 		l,
@@ -57,15 +57,10 @@ func (uh *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 			values ($1, $2, $3)
 			returning id, email, full_name, password, created_at, updated_at;`
 	var userResult entities.UserEntity
-	if qErr := uh.pg.QueryRow(
-		createUserQuery,
-		newUser.Email,
-		newUser.FullName,
-		hashedPassword,
-	).Scan(&userResult.Id, &userResult.Email, &userResult.FullName, &userResult.Password, &userResult.CreatedAt, &userResult.UpdatedAt); qErr != nil {
+	if queryErr := uh.pg.QueryRowx(createUserQuery, &newUser.Email, &newUser.FullName, &hashedPassword).StructScan(&userResult); queryErr != nil {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Failed to create user", nil))
-		uh.l.Println(qErr.Error())
+		uh.l.Println(queryErr.Error())
 		return
 	}
 
@@ -96,13 +91,13 @@ func (uh *UserHandler) GetManyUser(w http.ResponseWriter, r *http.Request) {
 		select id, email, full_name, password, created_at, updated_at from public.users;
 	`
 	var users []entities.UserEntity
-	queryRows, dbErr := uh.pg.QueryContext(uh.ctx, getManyUsersQuery)
+	dbErr := uh.pg.SelectContext(uh.ctx, &users, getManyUsersQuery)
 	if dbErr != nil {
 		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "User not found", nil))
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "User(s) not found", nil))
+		uh.l.Println(dbErr.Error())
 		return
 	}
-	queryRows.Scan(&users)
 
 	w.WriteHeader(http.StatusCreated)
 	if encodeErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse(
@@ -112,6 +107,7 @@ func (uh *UserHandler) GetManyUser(w http.ResponseWriter, r *http.Request) {
 	)); encodeErr != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Internal Server Error", nil))
+		uh.l.Println(dbErr.Error())
 		return
 	}
 
@@ -131,14 +127,16 @@ func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
 	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
 	if paramErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		uh.l.Println(paramErr)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Bad Request", nil))
+		uh.l.Println(paramErr.Error())
 		return
 	}
 
 	userClaim, ok := r.Context().Value("user").(*Claims)
-	if !ok && userClaim.UserId != userId.String() {
-		w.WriteHeader(http.StatusBadRequest)
-		uh.l.Println("Unauthorized")
+	if !ok || userClaim.UserId != userId.String() {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "User not found", nil))
+		uh.l.Println("Unauthorized access")
 		return
 	}
 
@@ -148,9 +146,10 @@ func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
 	`
 
 	var user entities.UserEntity
-	if dbErr := uh.pg.QueryRow(getOneUserByIdQuery, userId).Scan(&user); dbErr != nil {
+	if dbErr := uh.pg.QueryRowx(getOneUserByIdQuery, userId).StructScan(&user); dbErr != nil {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "User not found", nil))
+		uh.l.Println("User not found")
 		return
 	}
 
@@ -170,31 +169,42 @@ func (uh *UserHandler) GetOneUserById(w http.ResponseWriter, r *http.Request) {
 
 //	@Summary	Update one user by ID
 //	@Tags		users
-//	@Param		userId	path	string	true	"User id"
+//	@Param		userId	path	string				true	"User id"
+//	@Param		data	body	dtos.CreateUserDto	true	"create user param"
 //	@Produce	json
 //	@Success	200	{object}	utils.BaseResponse[entities.UserEntity]
-//	@Router		/users/{userId} [put]
+//	@Router		/users/{userId} [patch]
 //	@Security	Bearer
 func (uh *UserHandler) UpdateOneUserById(w http.ResponseWriter, r *http.Request) {
 	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
 	if paramErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		uh.l.Println(paramErr)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Bad Request", nil))
+		uh.l.Println(paramErr.Error())
 		return
 	}
 
 	userClaim, ok := r.Context().Value("user").(*Claims)
 	if !ok && userClaim.UserId != userId.String() {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Unauthorized", nil))
 		uh.l.Println("Unauthorized")
 		return
 	}
 
 	var payload dtos.UpdateUserDto
 	if decErr := json.NewDecoder(r.Body).Decode(&payload); decErr != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		uh.l.Println(decErr)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Internal Server Error", nil))
+		uh.l.Println(decErr.Error())
 		return
+	}
+
+	hashedPassword, pwErr := utils.HashPassword(payload.Password)
+	if pwErr != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Internal Server Error", nil))
+		uh.l.Println(pwErr.Error())
 	}
 
 	updateOneUserByIdQuery := `
@@ -216,17 +226,19 @@ func (uh *UserHandler) UpdateOneUserById(w http.ResponseWriter, r *http.Request)
 	`
 
 	var updatedUser entities.UserEntity
-	if dbErr := uh.pg.QueryRow(updateOneUserByIdQuery, userId).Scan(&updatedUser); dbErr != nil {
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "User not found", nil))
+	if dbErr := uh.pg.QueryRowx(updateOneUserByIdQuery, userId, payload.Email, hashedPassword, payload.FullName).StructScan(&updatedUser); dbErr != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Internal Server Error", nil))
+		uh.l.Println(dbErr.Error())
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	if encodeErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse(true, "User updated", updatedUser)); encodeErr != nil {
+	if encErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse(true, "User updated", updatedUser)); encErr != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		uh.l.Println(encodeErr)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Internal Server Error", nil))
+		uh.l.Println(encErr.Error())
 		return
 	}
 
@@ -241,17 +253,21 @@ func (uh *UserHandler) UpdateOneUserById(w http.ResponseWriter, r *http.Request)
 //	@Router		/users/{userId} [delete]
 //	@Security	Bearer
 func (uh *UserHandler) DeleteOneUserById(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	userId, paramErr := uuid.Parse(chi.URLParam(r, "userId"))
 	if paramErr != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		uh.l.Println(paramErr)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Bad Request", nil))
+		uh.l.Println(paramErr.Error())
 		return
 	}
 
 	userClaim, ok := r.Context().Value("user").(*Claims)
 	if !ok && userClaim.UserId != userId.String() {
-		w.WriteHeader(http.StatusBadRequest)
-		uh.l.Println("Unauthorized")
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Unauthorized", nil))
+		uh.l.Println(paramErr.Error())
 		return
 	}
 
@@ -269,16 +285,17 @@ func (uh *UserHandler) DeleteOneUserById(w http.ResponseWriter, r *http.Request)
 	`
 
 	var deletedUser entities.UserEntity
-	if dbErr := uh.pg.QueryRow(deleteOneUserByIdQuery, userId).Scan(&deletedUser); dbErr != nil {
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "User not found", nil))
+	if dbErr := uh.pg.QueryRowx(deleteOneUserByIdQuery, userId).StructScan(&deletedUser); dbErr != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Internal Server Error", nil))
+		uh.l.Println(dbErr.Error())
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	if encErr := json.NewEncoder(w).Encode(utils.CreateBaseResponse(true, "User deleted", deletedUser)); encErr != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Internal Server Error", nil))
 		uh.l.Println(encErr)
 		return
 	}
