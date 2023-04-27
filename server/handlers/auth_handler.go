@@ -2,16 +2,16 @@ package handlers
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
 	"os"
-	"server/db"
+	"server/dtos"
 	"server/utils"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/jmoiron/sqlx"
 )
 
 var EXPIRATION_TIME = time.Now().Add(6 * 30 * 24 * time.Hour)
@@ -19,22 +19,16 @@ var EXPIRATION_TIME = time.Now().Add(6 * 30 * 24 * time.Hour)
 type AuthHandler struct {
 	ctx context.Context
 	l   *log.Logger
-	q   *db.Queries
+	pg  *sqlx.DB
 }
 
-func NewAuthHandler(ctx context.Context, l *log.Logger, pg *sql.DB) *AuthHandler {
-	q := db.New(pg)
+func NewAuthHandler(ctx context.Context, l *log.Logger, pg *sqlx.DB) *AuthHandler {
 
 	return &AuthHandler{
 		ctx: ctx,
 		l:   l,
-		q:   q,
+		pg:  pg,
 	}
-}
-
-type LoginParams struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
 }
 
 type Claims struct {
@@ -43,36 +37,49 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-//	@Summary	Log in to user account
-//	@Tags		auth
-//	@Produce	json
-//	@Param		data	body		LoginParams	true	"Login params"
-//	@Success	200		{object}	utils.BaseResponse[string]
-//	@Router		/auth [post]
+// @Summary	Log in to user account
+// @Tags		auth
+// @Produce	json
+// @Param		data	body		dtos.AuthLoginDto	true	"Login params"
+// @Success	200		{object}	utils.BaseResponse[string]
+// @Router		/auth [post]
 func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
-	var param LoginParams
+	var param dtos.AuthLoginDto
 	if decErr := json.NewDecoder(r.Body).Decode(&param); decErr != nil {
-		http.Error(w, decErr.Error(), http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Bad Request", nil))
 		ah.l.Println(decErr.Error())
 		return
 	}
 
-	user, dbErr := ah.q.GetOneUserByEmail(ah.ctx, param.Email)
-	if dbErr != nil {
-		http.Error(w, dbErr.Error(), http.StatusNotFound)
-		ah.l.Println(dbErr.Error())
+	getOneUserByEmailQuery := `
+		select id, email, password 
+			from public.users
+			where
+				email = $1;
+	`
+	var foundUser struct {
+		Id       string
+		Email    string
+		Password string
+	}
+	if scanErr := ah.pg.QueryRow(getOneUserByEmailQuery, param.Email).Scan(&foundUser.Id, &foundUser.Email, &foundUser.Password); scanErr != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Internal Server Error", nil))
+		ah.l.Println(scanErr.Error())
 		return
 	}
 
-	if pwIsCorrect := utils.CheckPasswordIsCorrect(param.Password, user.Password); !pwIsCorrect {
-		http.Error(w, "Password is incorrect", http.StatusUnauthorized)
+	if pwIsCorrect := utils.CheckPasswordIsCorrect(param.Password, foundUser.Password); !pwIsCorrect {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(utils.CreateBaseResponse[any](false, "Unauthorized", nil))
 		ah.l.Println("Incorrect password")
 		return
 	}
 
 	claims := Claims{
 		Email:  param.Email,
-		UserId: user.ID.String(),
+		UserId: foundUser.Id,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(EXPIRATION_TIME),
 		},
