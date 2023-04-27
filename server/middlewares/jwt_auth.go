@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"context"
-	"database/sql"
 	"log"
 	"net/http"
 	"os"
@@ -10,9 +9,10 @@ import (
 	"strings"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/jmoiron/sqlx"
 )
 
-func JwtAuth(ctx context.Context, l *log.Logger, pg *sql.DB) func(http.Handler) http.Handler {
+func JwtAuth(ctx context.Context, l *log.Logger, pg *sqlx.DB) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			authHeader := r.Header.Get("Authorization")
