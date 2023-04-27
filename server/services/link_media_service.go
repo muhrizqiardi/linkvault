@@ -24,7 +24,26 @@ func NewLinkMediaService(ctx context.Context, l *log.Logger, pg *sqlx.DB) *LinkM
 	}
 }
 
-func (lms *LinkMediaService) Create(payload dtos.CreateLinkMediaDto) (entities.LinkMediaEntity, error)
+func (lms *LinkMediaService) Create(payload dtos.CreateLinkMediaDto) (entities.LinkMediaEntity, error) {
+	createLinkMediaQuery := `
+		insert into public.link_medias (link_id, media_url, owner_id)
+			value ($1, $2, $3)
+			returning (id, link_id, media_url, owner_id, created_at, updated_at);
+	`
+
+	var newLinkMedia entities.LinkMediaEntity
+	if err := lms.pg.Select(
+		&newLinkMedia,
+		createLinkMediaQuery,
+		payload.LinkId,
+		payload.MediaUrl,
+		payload.OwnerId,
+	); err != nil {
+		return entities.LinkMediaEntity{}, err
+	}
+
+	return newLinkMedia, nil
+}
 
 func (lms *LinkMediaService) GetMany() (entities.LinkMediaEntity, error)
 
