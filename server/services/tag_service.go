@@ -45,7 +45,22 @@ func (ts *TagService) Create(payload dtos.CreateTagDto) (entities.TagEntity, err
 	return newTag, nil
 }
 
-func (ts *TagService) GetMany() ([]entities.TagEntity, error)
+func (ts *TagService) GetMany() ([]entities.TagEntity, error) {
+	getManyTagQuery := `
+		select id, name, link_id, owner_id, created_at, updated_at
+			from public.tags;
+	`
+
+	var tags []entities.TagEntity
+	if err := ts.pg.Select(
+		&tags,
+		getManyTagQuery,
+	); err != nil {
+		return []entities.TagEntity{}, err
+	}
+
+	return tags, nil
+}
 
 func (ts *TagService) GetOne(tagId uuid.UUID) (entities.TagEntity, error)
 
