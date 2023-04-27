@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,9 +13,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	"github.com/swaggo/http-swagger"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 //	@title						LinkVault API
@@ -43,7 +43,7 @@ func main() {
 	)
 
 	ctx := context.Background()
-	pg, dbConnErr := sql.Open("postgres", connstring)
+	pg, dbConnErr := sqlx.Open("postgres", connstring)
 	if dbConnErr != nil {
 		l.Fatal("Failed to connect to database", dbConnErr)
 		return
