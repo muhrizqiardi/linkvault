@@ -38,5 +38,6 @@ require (
 require (
 	github.com/go-chi/jwtauth/v5 v5.1.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/jmoiron/sqlx v1.3.5
 	github.com/swaggo/http-swagger v1.3.4
 )
