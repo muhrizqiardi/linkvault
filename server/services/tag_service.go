@@ -105,4 +105,20 @@ func (ts *TagService) UpdateOne(tagId uuid.UUID, payload dtos.UpdateTagDto) (ent
 	return updatedTag, nil
 }
 
-func (ts *TagService) DeleteOne(tagId uuid.UUID) (entities.TagEntity, error)
+func (ts *TagService) DeleteOne(tagId uuid.UUID) (entities.TagEntity, error) {
+	deleteOneTagQuery := `
+		delete from public.tags
+			where id = $1
+	`
+
+	var deletedTag entities.TagEntity
+	if err := ts.pg.Select(
+		&deletedTag,
+		deleteOneTagQuery,
+		tagId,
+	); err != nil {
+		return entities.TagEntity{}, err
+	}
+
+	return deletedTag, nil
+}
