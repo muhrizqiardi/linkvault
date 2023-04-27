@@ -1,5 +1,10 @@
 package utils
 
+import (
+	"encoding/json"
+	"net/http"
+)
+
 type BaseResponse[T any] struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
@@ -12,4 +17,12 @@ func CreateBaseResponse[T any](success bool, message string, data T) BaseRespons
 		Message: message,
 		Data:    data,
 	}
+}
+
+func BaseResponseWriter[T any](w http.ResponseWriter, statusCode int, success bool, message string, data T) {
+	baseResponse := CreateBaseResponse(success, message, data)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(baseResponse)
+	return
 }
