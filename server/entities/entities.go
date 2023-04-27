@@ -26,6 +26,7 @@ type FolderEntity struct {
 type TagEntity struct {
 	Id        uuid.UUID `json:"id" db:"id" validation:"required,uuid" format:"uuid"`
 	Name      string    `json:"name" db:"name" validation:"required,name"`
+	LinkId    uuid.UUID `json:"link_id" db:"link_id" validation:"required"`
 	OwnerId   uuid.UUID `json:"owner_id" db:"owner_id" validation:"required,uuid" format:"uuid"`
 	CreatedAt time.Time `json:"created_at" db:"created_at" validation:"date" format:"date-time"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at" validation:"date" format:"date-time"`
