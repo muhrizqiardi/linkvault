@@ -196,6 +196,67 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/{userId}/folders/{folderId}/links": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "link"
+                ],
+                "summary": "Create link",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User/Owner ID",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Folder ID",
+                        "name": "folderId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.CreateLinkDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created user",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-entities_LinkEntity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -212,6 +273,27 @@ const docTemplate = `{
                 }
             }
         },
+        "dtos.CreateLinkDto": {
+            "type": "object",
+            "required": [
+                "cover_url",
+                "excerpt",
+                "url"
+            ],
+            "properties": {
+                "cover_url": {
+                    "type": "string",
+                    "format": "url"
+                },
+                "excerpt": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string",
+                    "format": "url"
+                }
+            }
+        },
         "dtos.CreateUserDto": {
             "type": "object",
             "properties": {
@@ -225,6 +307,40 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "minLength": 8
+                }
+            }
+        },
+        "entities.LinkEntity": {
+            "type": "object",
+            "properties": {
+                "cover_url": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "excerpt": {
+                    "type": "string"
+                },
+                "folder_id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "owner_id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "url": {
+                    "type": "string"
                 }
             }
         },
@@ -252,6 +368,18 @@ const docTemplate = `{
                 }
             }
         },
+        "utils.BaseResponse-any": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "utils.BaseResponse-array_entities_UserEntity": {
             "type": "object",
             "properties": {
@@ -260,6 +388,20 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/entities.UserEntity"
                     }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "utils.BaseResponse-entities_LinkEntity": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/entities.LinkEntity"
                 },
                 "message": {
                     "type": "string"

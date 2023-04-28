@@ -9,6 +9,21 @@ definitions:
         minLength: 8
         type: string
     type: object
+  dtos.CreateLinkDto:
+    properties:
+      cover_url:
+        format: url
+        type: string
+      excerpt:
+        type: string
+      url:
+        format: url
+        type: string
+    required:
+    - cover_url
+    - excerpt
+    - url
+    type: object
   dtos.CreateUserDto:
     properties:
       email:
@@ -18,6 +33,30 @@ definitions:
         type: string
       password:
         minLength: 8
+        type: string
+    type: object
+  entities.LinkEntity:
+    properties:
+      cover_url:
+        type: string
+      created_at:
+        format: date-time
+        type: string
+      excerpt:
+        type: string
+      folder_id:
+        format: uuid
+        type: string
+      id:
+        format: uuid
+        type: string
+      owner_id:
+        format: uuid
+        type: string
+      updated_at:
+        format: date-time
+        type: string
+      url:
         type: string
     type: object
   entities.UserEntity:
@@ -37,12 +76,29 @@ definitions:
         format: date-time
         type: string
     type: object
+  utils.BaseResponse-any:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
   utils.BaseResponse-array_entities_UserEntity:
     properties:
       data:
         items:
           $ref: '#/definitions/entities.UserEntity'
         type: array
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  utils.BaseResponse-entities_LinkEntity:
+    properties:
+      data:
+        $ref: '#/definitions/entities.LinkEntity'
       message:
         type: string
       success:
@@ -186,6 +242,45 @@ paths:
       summary: Update one user by ID
       tags:
       - users
+  /users/{userId}/folders/{folderId}/links:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User/Owner ID
+        in: path
+        name: userId
+        required: true
+        type: string
+      - description: Folder ID
+        in: path
+        name: folderId
+        required: true
+        type: string
+      - description: Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateLinkDto'
+      responses:
+        "201":
+          description: Successfully created user
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-entities_LinkEntity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Create link
+      tags:
+      - link
 securityDefinitions:
   Bearer:
     in: header
