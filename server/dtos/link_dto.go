@@ -2,6 +2,12 @@ package dtos
 
 import "github.com/google/uuid"
 
+type CreateLinkOnDefaultFolder struct {
+	Url      string `json:"url" db:"url" validate:"required,url"`
+	Excerpt  string `json:"excerpt" db:"excerpt" validate:"required,string"`
+	CoverUrl string `json:"cover_url" db:"cover_url" validate:"required,url"`
+}
+
 type CreateLinkDto struct {
 	Url      string    `json:"url" db:"url" validate:"required,url"`
 	Excerpt  string    `json:"excerpt" db:"excerpt" validate:"required,string"`
