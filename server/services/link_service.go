@@ -24,7 +24,7 @@ func NewLinkService(ctx context.Context, l *log.Logger, pg *sqlx.DB) *LinkServic
 	}
 }
 
-func (ls *LinkService) Create(payload dtos.CreateLinkDto) (entities.LinkEntity, error) {
+func (ls *LinkService) Create(ownerId uuid.UUID, folderId uuid.UUID, payload dtos.CreateLinkDto) (entities.LinkEntity, error) {
 	createNewLinkQuery := `
 		insert into public.links (
 					url, 
@@ -34,7 +34,7 @@ func (ls *LinkService) Create(payload dtos.CreateLinkDto) (entities.LinkEntity, 
 					folder_id 
 				)			
 			values 
-				($1, $2, $3, $4, $5, $6, $7)
+				($1, $2, $3, $4, $5)
 			returning 
 				url,
 				excerpt,
@@ -51,9 +51,8 @@ func (ls *LinkService) Create(payload dtos.CreateLinkDto) (entities.LinkEntity, 
 		payload.Url,
 		payload.Excerpt,
 		payload.CoverUrl,
-		payload.OwnerId,
-		payload.OwnerId,
-		payload.FolderId,
+		ownerId.String(),
+		folderId.String(),
 	); err != nil {
 		return entities.LinkEntity{}, err
 	}
