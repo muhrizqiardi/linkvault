@@ -24,6 +24,7 @@ create table if not exists public.folders (
 create table if not exists public.links (
     id uuid default uuid_generate_v4() primary key,
     url text not null unique,
+    title text not null,
     excerpt text not null,
     cover_url text not null,
     owner_id uuid not null,
