@@ -35,6 +35,7 @@ type TagEntity struct {
 type LinkEntity struct {
 	Id        uuid.UUID `json:"id" db:"id" validation:"required,uuid" format:"uuid"`
 	Url       string    `json:"url" db:"url" validation:"required,url"`
+	Title     string    `json:"title" db:"title" validation:"required"`
 	Excerpt   string    `json:"excerpt" db:"excerpt" validation:"required,string"`
 	CoverUrl  string    `json:"cover_url" db:"cover_url" validation:"required,url"`
 	OwnerId   uuid.UUID `json:"owner_id" db:"owner_id" validation:"required,uuid" format:"uuid"`
