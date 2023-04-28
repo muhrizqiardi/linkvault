@@ -31,15 +31,18 @@ func NewLinkHandler(ctx context.Context, l *log.Logger, pg *sqlx.DB) *LinkHandle
 
 // Create link on default folder
 //
-// @Summary Create link
-// @Tags link
-// @Accept json
-// @Procedure json
-// @Param userId path uuid true "User/Owner ID"
-// @Success 201 {object} utils.BaseResponse[entities.LinkEntity]
-// @Failure 4xx {object} utils.BaseResponse[any]
-// @Failure 5xx {object} utils.BaseResponse[any]
-// @Router /users/{userId}/links
+//	@Summary	Create link
+//	@Tags		link
+//	@Accept		json
+//	@Procedure	json
+//	@Param		userId		path		string									true	"User/Owner ID"
+//	@Param		folderId	path		string									true	"Folder ID"
+//	@Param		payload		body		dtos.CreateLinkDto						true	"Payload"
+//	@Success	201			{object}	utils.BaseResponse[entities.LinkEntity]	"Successfully created user"
+//	@Failure	400			{object}	utils.BaseResponse[any]					"Bad Request"
+//	@Failure	500			{object}	utils.BaseResponse[any]					"Internal Server Error"
+//	@Security	Bearer
+//	@Router		/users/{userId}/folders/{folderId}/links [post]
 func (l *LinkHandler) CreateLink(w http.ResponseWriter, r *http.Request) {
 	userId, parseUserIdErr := uuid.Parse(chi.URLParam(r, "userId"))
 	if parseUserIdErr != nil {
