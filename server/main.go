@@ -80,6 +80,7 @@ func main() {
 
 		r.Post("/folders/{folderId}/links", linkHanlder.CreateLink)
 		r.Get("/links", linkHanlder.GetManyLinks)
+		r.Get("/folders/{folderId}/links", linkHanlder.GetManyLinksInFolder)
 	})
 	http.ListenAndServe(":9000", r)
 }
