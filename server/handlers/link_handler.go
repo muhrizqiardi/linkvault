@@ -131,3 +131,56 @@ func (l *LinkHandler) GetManyLinks(w http.ResponseWriter, r *http.Request) {
 	utils.BaseResponseWriter(w, http.StatusOK, true, "Link(s) found", links)
 	return
 }
+
+// Get many link belongs to a user inside a folder
+//
+//	@Summary	Get many link belongs to a user inside a folder
+//	@Tags		link
+//	@Accept		json
+//	@Procedure	json
+//	@Param		folderId	path		string										true	"Folder ID"
+//	@Param		title		query		string										false	"Search matching title"
+//	@Param		excerpt		query		string										false	"Search matching excerpt"
+//	@Param		orderBy		query		string										false	"Order by title, created date, or modified date"	Enum(title_ASC, title_DESC, createdAt_ASC, createdAt_DESC, updatedAt_ASC, updatedAt_DESC)	default(updatedAt_DESC)
+//	@Param		limit		query		int											false	"Limit every page"									default(10)
+//	@Param		page		query		int											false	"Page count"										default(1)
+//	@Success	200			{object}	[]utils.BaseResponse[entities.LinkEntity]	"Successfully created user"
+//	@Failure	400			{object}	utils.BaseResponse[any]						"Bad Request"
+//	@Failure	500			{object}	utils.BaseResponse[any]						"Internal Server Error"
+//	@Security	Bearer
+//	@Router		/folders/{folderId}/links [get]
+func (l *LinkHandler) GetManyLinksInFolder(w http.ResponseWriter, r *http.Request) {
+	userClaim, _ := r.Context().Value("user").(*Claims)
+	title := r.URL.Query().Get("title")
+	excerpt := r.URL.Query().Get("excerpt")
+	orderBy := r.URL.Query().Get("orderBy")
+	if err := utils.ValidateEnumString(orderBy, "title_ASC", "title_DESC", "createdAt_ASC", "createdAt_DESC", "updatedAt_ASC", "updatedAt_DESC"); err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
+		l.l.Println(err.Error())
+		return
+	}
+	defaultLimit := 10
+	defaultPage := 1
+	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	if err != nil {
+		limit = defaultLimit
+	}
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		page = defaultPage
+	}
+	links, err := l.linkService.GetManyBelongsToUser(uuid.MustParse(userClaim.UserId), title, excerpt, orderBy, limit, page)
+	if err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusInternalServerError, false, "Internal Server Error", nil)
+		l.l.Println(err.Error())
+		return
+	}
+	if len(links) == 0 {
+		utils.BaseResponseWriter[any](w, http.StatusNotFound, false, "Link(s) not found", nil)
+		l.l.Println("Link(s) not found")
+		return
+	}
+
+	utils.BaseResponseWriter(w, http.StatusOK, true, "Link(s) found", links)
+	return
+}
