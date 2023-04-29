@@ -301,6 +301,33 @@ paths:
       tags:
       - link
   /links/{linkId}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Link ID
+        in: path
+        name: linkId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Successfully deleted a link
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Failed to delete a link
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Delete one link by ID
+      tags:
+      - link
     patch:
       consumes:
       - application/json
