@@ -37,6 +37,20 @@ definitions:
         minLength: 8
         type: string
     type: object
+  dtos.UpdateLinkDto:
+    properties:
+      cover_url:
+        format: url
+        type: string
+      excerpt:
+        format: url
+        type: string
+      title:
+        type: string
+    required:
+    - cover_url
+    - excerpt
+    type: object
   entities.LinkEntity:
     properties:
       cover_url:
@@ -284,6 +298,40 @@ paths:
       security:
       - Bearer: []
       summary: Get many link
+      tags:
+      - link
+  /links/{linkId}:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Link ID
+        in: path
+        name: linkId
+        required: true
+        type: string
+      - description: Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateLinkDto'
+      responses:
+        "200":
+          description: Successfully updated a link
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-entities_LinkEntity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Update one link by ID
       tags:
       - link
   /users:

@@ -81,6 +81,7 @@ func main() {
 		r.Post("/folders/{folderId}/links", linkHanlder.CreateLink)
 		r.Get("/links", linkHanlder.GetManyLinks)
 		r.Get("/folders/{folderId}/links", linkHanlder.GetManyLinksInFolder)
+		r.Patch("/links/{linkId}", linkHanlder.UpdateLink)
 	})
 	http.ListenAndServe(":9000", r)
 }

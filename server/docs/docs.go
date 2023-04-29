@@ -253,6 +253,60 @@ const docTemplate = `{
                 }
             }
         },
+        "/links/{linkId}": {
+            "patch": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "link"
+                ],
+                "summary": "Update one link by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Link ID",
+                        "name": "linkId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.UpdateLinkDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated a link",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-entities_LinkEntity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "produces": [
@@ -456,6 +510,26 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "minLength": 8
+                }
+            }
+        },
+        "dtos.UpdateLinkDto": {
+            "type": "object",
+            "required": [
+                "cover_url",
+                "excerpt"
+            ],
+            "properties": {
+                "cover_url": {
+                    "type": "string",
+                    "format": "url"
+                },
+                "excerpt": {
+                    "type": "string",
+                    "format": "url"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },
