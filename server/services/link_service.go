@@ -157,30 +157,23 @@ func (ls *LinkService) UpdateOne(linkId uuid.UUID, payload dtos.UpdateLinkDto) (
 	updateOneLinkQuery := `
 		update public.links
 			set 
-				id = coalesce($1, id), 
-				url = coalesce($2, url), 
+				title = coalesce($2, title), 
 				excerpt = coalesce($3, excerpt),
 				cover_url = coalesce($4, cover_url),
-				owner_id = coalesce($5, owner_id),
-				folder_id = coalesce($6, folder_id),
-				created_at = coalesce($7, created_at),
 				updated_at = current_timestamp
+			where id = $1
 			returning
-				id, 			
-				url, 			
-				excerpt, 
-				cover_url, 
-				owner_id, 
-				folder_id, 
-				created_at, 
-				updated_at;
+				id, url, title, excerpt, cover_url, owner_id, folder_id, created_at, updated_at;
 	`
 
 	var updatedLink entities.LinkEntity
-	if err := ls.pg.Select(
+	if err := ls.pg.Get(
 		&updatedLink,
 		updateOneLinkQuery,
 		linkId.String(),
+		payload.Title,
+		payload.Excerpt,
+		payload.CoverUrl,
 	); err != nil {
 		return entities.LinkEntity{}, err
 	}
