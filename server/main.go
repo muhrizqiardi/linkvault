@@ -82,6 +82,7 @@ func main() {
 		r.Get("/links", linkHanlder.GetManyLinks)
 		r.Get("/folders/{folderId}/links", linkHanlder.GetManyLinksInFolder)
 		r.Patch("/links/{linkId}", linkHanlder.UpdateLink)
+		r.Delete("/links/{linkId}", linkHanlder.DeleteOneLink)
 	})
 	http.ListenAndServe(":9000", r)
 }
