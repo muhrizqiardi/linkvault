@@ -35,7 +35,9 @@ CREATE TABLE public.files (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     link_id uuid NOT NULL,
     file_url text NOT NULL,
-    owner_id uuid NOT NULL
+    owner_id uuid NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -46,7 +48,9 @@ CREATE TABLE public.files (
 CREATE TABLE public.folders (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     name text NOT NULL,
-    owner_id uuid NOT NULL
+    owner_id uuid NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -58,7 +62,9 @@ CREATE TABLE public.link_medias (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     link_id uuid NOT NULL,
     media_url text NOT NULL,
-    owner_id uuid NOT NULL
+    owner_id uuid NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -69,10 +75,13 @@ CREATE TABLE public.link_medias (
 CREATE TABLE public.links (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     url text NOT NULL,
+    title text NOT NULL,
     excerpt text NOT NULL,
     cover_url text NOT NULL,
     owner_id uuid NOT NULL,
-    folder_id uuid NOT NULL
+    folder_id uuid NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -81,7 +90,7 @@ CREATE TABLE public.links (
 --
 
 CREATE TABLE public.schema_migrations (
-    version character varying(128) NOT NULL
+    version character varying(255) NOT NULL
 );
 
 
@@ -92,7 +101,10 @@ CREATE TABLE public.schema_migrations (
 CREATE TABLE public.tags (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     name text NOT NULL,
-    owner_id uuid NOT NULL
+    link_id uuid NOT NULL,
+    owner_id uuid NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -104,7 +116,9 @@ CREATE TABLE public.users (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     email text NOT NULL,
     full_name text NOT NULL,
-    password text NOT NULL
+    password text NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -250,6 +264,14 @@ ALTER TABLE ONLY public.links
 
 ALTER TABLE ONLY public.links
     ADD CONSTRAINT links_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: tags tags_link_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tags
+    ADD CONSTRAINT tags_link_id_fkey FOREIGN KEY (link_id) REFERENCES public.links(id);
 
 
 --
