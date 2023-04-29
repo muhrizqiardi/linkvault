@@ -181,17 +181,10 @@ func (ls *LinkService) UpdateOne(linkId uuid.UUID, payload dtos.UpdateLinkDto) (
 }
 
 func (ls *LinkService) DeleteOne(linkId uuid.UUID) (entities.LinkEntity, error) {
-	deleteOneLinkQuery := `
-		delete from public.link
-			where id = $1;
-	`
+	deleteOneLinkQuery := `delete from public.links where id = $1;`
 
 	var deletedLink entities.LinkEntity
-	if err := ls.pg.Select(
-		&deletedLink,
-		deleteOneLinkQuery,
-		linkId.String(),
-	); err != nil {
+	if _, err := ls.pg.Exec(deleteOneLinkQuery, linkId.String()); err != nil {
 		return entities.LinkEntity{}, err
 	}
 	return deletedLink, nil
