@@ -153,7 +153,10 @@ const docTemplate = `{
                     "200": {
                         "description": "Successfully created user",
                         "schema": {
-                            "$ref": "#/definitions/utils.BaseResponse-entities_LinkEntity"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/utils.BaseResponse-entities_LinkEntity"
+                            }
                         }
                     },
                     "400": {

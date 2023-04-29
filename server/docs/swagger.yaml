@@ -218,7 +218,9 @@ paths:
         "200":
           description: Successfully created user
           schema:
-            $ref: '#/definitions/utils.BaseResponse-entities_LinkEntity'
+            items:
+              $ref: '#/definitions/utils.BaseResponse-entities_LinkEntity'
+            type: array
         "400":
           description: Bad Request
           schema:

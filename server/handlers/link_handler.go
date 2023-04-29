@@ -86,14 +86,14 @@ func (l *LinkHandler) CreateLink(w http.ResponseWriter, r *http.Request) {
 //	@Tags		link
 //	@Accept		json
 //	@Procedure	json
-//	@Param		title	query		string									false	"Search matching title"
-//	@Param		excerpt	query		string									false	"Search matching excerpt"
-//	@Param		orderBy	query		string									false	"Order by title, created date, or modified date"	Enum(title_ASC, title_DESC, createdAt_ASC, createdAt_DESC, updatedAt_ASC, updatedAt_DESC)	default(updatedAt_DESC)
-//	@Param		limit	query		int										false	"Limit every page"									default(10)
-//	@Param		page	query		int										false	"Page count"										default(1)
+//	@Param		title	query		string										false	"Search matching title"
+//	@Param		excerpt	query		string										false	"Search matching excerpt"
+//	@Param		orderBy	query		string										false	"Order by title, created date, or modified date"	Enum(title_ASC, title_DESC, createdAt_ASC, createdAt_DESC, updatedAt_ASC, updatedAt_DESC)	default(updatedAt_DESC)
+//	@Param		limit	query		int											false	"Limit every page"									default(10)
+//	@Param		page	query		int											false	"Page count"										default(1)
 //	@Success	200		{object}	[]utils.BaseResponse[entities.LinkEntity]	"Successfully created user"
-//	@Failure	400		{object}	utils.BaseResponse[any]					"Bad Request"
-//	@Failure	500		{object}	utils.BaseResponse[any]					"Internal Server Error"
+//	@Failure	400		{object}	utils.BaseResponse[any]						"Bad Request"
+//	@Failure	500		{object}	utils.BaseResponse[any]						"Internal Server Error"
 //	@Security	Bearer
 //	@Router		/links [get]
 func (l *LinkHandler) GetManyLinks(w http.ResponseWriter, r *http.Request) {
