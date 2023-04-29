@@ -228,3 +228,34 @@ func (l *LinkHandler) UpdateLink(w http.ResponseWriter, r *http.Request) {
 
 	utils.BaseResponseWriter(w, http.StatusOK, true, "Successfully updated link", updatedLink)
 }
+
+// Delete one link by ID
+//
+//	@Summary	Delete one link by ID
+//	@Tags		link
+//	@Accept		json
+//	@Procedure	json
+//	@Param		linkId	path		string					true	"Link ID"
+//	@Success	200		{object}	utils.BaseResponse[any]	"Successfully deleted a link"
+//	@Failure	400		{object}	utils.BaseResponse[any]	"Bad Request"
+//	@Failure	500		{object}	utils.BaseResponse[any]	"Failed to delete a link"
+//	@Security	Bearer
+//	@Router		/links/{linkId} [delete]
+func (l *LinkHandler) DeleteOneLink(w http.ResponseWriter, r *http.Request) {
+	linkId, parseLinkIdErr := uuid.Parse(chi.URLParam(r, "linkId"))
+	if parseLinkIdErr != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
+		l.l.Println(parseLinkIdErr.Error())
+		return
+	}
+
+	deletedLink, err := l.linkService.DeleteOne(linkId)
+	if err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Failed to delete a link", nil)
+		l.l.Println(err.Error())
+		return
+	}
+
+	utils.BaseResponseWriter[any](w, http.StatusBadRequest, true, "Successfully deleted a link", deletedLink)
+	return
+}
