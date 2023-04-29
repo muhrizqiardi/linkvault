@@ -8,6 +8,7 @@ import (
 	"os"
 	"server/handlers"
 	"server/middlewares"
+	"server/services"
 
 	_ "server/docs"
 
@@ -55,8 +56,11 @@ func main() {
 
 	r.Get("/docs/*", httpSwagger.WrapHandler)
 
+	linkService := services.NewLinkService(ctx, l, pg)
+
 	userHandler := handlers.NewUserHandler(ctx, l, pg)
 	authHandler := handlers.NewAuthHandler(ctx, l, pg)
+	linkHanlder := handlers.NewLinkHandler(ctx, l, *linkService)
 
 	// Public
 	r.Group(func(r chi.Router) {
@@ -73,6 +77,9 @@ func main() {
 		r.Get("/users/{userId}", userHandler.GetOneUserById)
 		r.Patch("/users/{userId}", userHandler.UpdateOneUserById)
 		r.Delete("/users/{userId}", userHandler.DeleteOneUserById)
+
+		r.Post("/folders/{folderId}/links", linkHanlder.CreateLink)
+		r.Get("/links", linkHanlder.GetManyLinks)
 	})
 	http.ListenAndServe(":9000", r)
 }
