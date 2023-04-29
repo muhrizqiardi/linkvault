@@ -16,6 +16,8 @@ definitions:
         type: string
       excerpt:
         type: string
+      title:
+        type: string
       url:
         format: url
         type: string
@@ -52,6 +54,8 @@ definitions:
         type: string
       owner_id:
         format: uuid
+        type: string
+      title:
         type: string
       updated_at:
         format: date-time
@@ -148,6 +152,86 @@ paths:
       summary: Log in to user account
       tags:
       - auth
+  /folders/{folderId}/links:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Folder ID
+        in: path
+        name: folderId
+        required: true
+        type: string
+      - description: Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateLinkDto'
+      responses:
+        "201":
+          description: Successfully created a link
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-entities_LinkEntity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Create link
+      tags:
+      - link
+  /links:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Search matching title
+        in: query
+        name: title
+        type: string
+      - description: Search matching excerpt
+        in: query
+        name: excerpt
+        type: string
+      - default: updatedAt_DESC
+        description: Order by title, created date, or modified date
+        in: query
+        name: orderBy
+        type: string
+      - default: 10
+        description: Limit every page
+        in: query
+        name: limit
+        type: integer
+      - default: 1
+        description: Page count
+        in: query
+        name: page
+        type: integer
+      responses:
+        "200":
+          description: Successfully created user
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-entities_LinkEntity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Get many link
+      tags:
+      - link
   /users:
     get:
       produces:
@@ -242,45 +326,6 @@ paths:
       summary: Update one user by ID
       tags:
       - users
-  /users/{userId}/folders/{folderId}/links:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: User/Owner ID
-        in: path
-        name: userId
-        required: true
-        type: string
-      - description: Folder ID
-        in: path
-        name: folderId
-        required: true
-        type: string
-      - description: Payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.CreateLinkDto'
-      responses:
-        "201":
-          description: Successfully created user
-          schema:
-            $ref: '#/definitions/utils.BaseResponse-entities_LinkEntity'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/utils.BaseResponse-any'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/utils.BaseResponse-any'
-      security:
-      - Bearer: []
-      summary: Create link
-      tags:
-      - link
 securityDefinitions:
   Bearer:
     in: header
