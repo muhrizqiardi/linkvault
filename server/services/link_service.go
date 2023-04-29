@@ -66,22 +66,6 @@ func (ls *LinkService) GetOne(linkId uuid.UUID) (entities.LinkEntity, error) {
 	return link, nil
 }
 
-func (ls *LinkService) GetMany() ([]entities.LinkEntity, error) {
-	getManyLinkQuery := `
-		select id, url, excerpt, cover_url, owner_id, folder_id, created_at, updated_at
-			from public.links;
-	`
-
-	var links []entities.LinkEntity
-	if err := ls.pg.Select(
-		&links,
-		getManyLinkQuery,
-	); err != nil {
-		return []entities.LinkEntity{}, err
-	}
-	return links, nil
-}
-
 func (ls *LinkService) GetManyBelongsToUser(ownerId uuid.UUID, title string, excerpt string, orderBy string, limit int, page int) ([]entities.LinkEntity, error) {
 	getManyLinkQuery := `
 		select id, url, title, excerpt, cover_url, owner_id, folder_id, created_at, updated_at
