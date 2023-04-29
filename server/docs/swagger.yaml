@@ -328,6 +328,33 @@ paths:
       summary: Delete one link by ID
       tags:
       - link
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Link ID
+        in: path
+        name: linkId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Successfully updated a link
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-entities_LinkEntity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Get one link by ID
+      tags:
+      - link
     patch:
       consumes:
       - application/json
