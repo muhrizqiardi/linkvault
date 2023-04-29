@@ -109,23 +109,45 @@ func (ls *LinkService) GetManyBelongsToUser(ownerId uuid.UUID, title string, exc
 	return links, nil
 }
 
-func (ls *LinkService) GetManyBelongsToUserInFolder() ([]entities.LinkEntity, error) {
+func (ls *LinkService) GetManyBelongsToUserInFolder(ownerId uuid.UUID, folderId uuid.UUID, title string, excerpt string, orderBy string, limit int, page int) ([]entities.LinkEntity, error) {
 	getManyLinkQuery := `
 		select id, url, title, excerpt, cover_url, owner_id, folder_id, created_at, updated_at
 			from public.links
-			where
-				($1 is null or owner_id = $1) and
-				($2 is null or excerpt ilike $2) and
-				($3 is null or folder_id = $3)
-			order by $4 $5
-			limit $7 $8;
+			where 
+				owner_id = $1 and
+				folder_id = $2 and
+				($3::text is null or $3 = '' or excerpt ilike $3) and
+				($4::text is null or $4 = '' or title ilike $4)
+			order by %s 
+			limit $5 offset $6;
 	`
 
+	if err := utils.ValidateEnumString(orderBy, "title_ASC", "title_DESC", "createdAt_ASC", "createdAt_DESC", "updatedAt_ASC", "updatedAt_DESC"); err != nil {
+		return []entities.LinkEntity{}, errors.New("Invalid `orderBy` param")
+	}
+	switch orderBy {
+	case "title_ASC":
+		getManyLinkQuery = fmt.Sprintf(getManyLinkQuery, "title asc")
+		break
+	case "title_DESC":
+		getManyLinkQuery = fmt.Sprintf(getManyLinkQuery, "title desc")
+		break
+	case "createdAt_ASC":
+		getManyLinkQuery = fmt.Sprintf(getManyLinkQuery, "created_at asc")
+		break
+	case "createdAt_DESC":
+		getManyLinkQuery = fmt.Sprintf(getManyLinkQuery, "created_at desc")
+		break
+	case "updatedAt_ASC":
+		getManyLinkQuery = fmt.Sprintf(getManyLinkQuery, "updated_at asc")
+		break
+	case "updatedAt_DESC":
+		getManyLinkQuery = fmt.Sprintf(getManyLinkQuery, "updated_at desc")
+		break
+	}
+
 	var links []entities.LinkEntity
-	if err := ls.pg.Select(
-		&links,
-		getManyLinkQuery,
-	); err != nil {
+	if err := ls.pg.Select(&links, getManyLinkQuery, ownerId.String(), title, excerpt, limit, (page-1)*limit); err != nil {
 		return []entities.LinkEntity{}, err
 	}
 	return links, nil
