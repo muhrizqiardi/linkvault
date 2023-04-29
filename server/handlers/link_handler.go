@@ -185,6 +185,37 @@ func (l *LinkHandler) GetManyLinksInFolder(w http.ResponseWriter, r *http.Reques
 	return
 }
 
+// Get one link by ID
+//
+//	@Summary	Get one link by ID
+//	@Tags		link
+//	@Accept		json
+//	@Procedure	json
+//	@Param		linkId	path		string									true	"Link ID"
+//	@Success	200		{object}	utils.BaseResponse[entities.LinkEntity]	"Successfully updated a link"
+//	@Failure	400		{object}	utils.BaseResponse[any]					"Bad Request"
+//	@Failure	500		{object}	utils.BaseResponse[any]					"Internal Server Error"
+//	@Security	Bearer
+//	@Router		/links/{linkId} [get]
+func (l *LinkHandler) GetOneLink(w http.ResponseWriter, r *http.Request) {
+	linkId, parseLinkIdErr := uuid.Parse(chi.URLParam(r, "linkId"))
+	if parseLinkIdErr != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
+		l.l.Println(parseLinkIdErr.Error())
+		return
+	}
+
+	link, err := l.linkService.GetOne(linkId)
+	if err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusInternalServerError, false, "Internal Server Error", nil)
+		l.l.Println(err.Error())
+		return
+	}
+
+	utils.BaseResponseWriter[any](w, http.StatusOK, false, "Found one user", link)
+	return
+}
+
 // Update one link by ID
 //
 //	@Summary	Update one link by ID
