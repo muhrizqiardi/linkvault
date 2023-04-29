@@ -153,6 +153,58 @@ paths:
       tags:
       - auth
   /folders/{folderId}/links:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Folder ID
+        in: path
+        name: folderId
+        required: true
+        type: string
+      - description: Search matching title
+        in: query
+        name: title
+        type: string
+      - description: Search matching excerpt
+        in: query
+        name: excerpt
+        type: string
+      - default: updatedAt_DESC
+        description: Order by title, created date, or modified date
+        in: query
+        name: orderBy
+        type: string
+      - default: 10
+        description: Limit every page
+        in: query
+        name: limit
+        type: integer
+      - default: 1
+        description: Page count
+        in: query
+        name: page
+        type: integer
+      responses:
+        "200":
+          description: Successfully created user
+          schema:
+            items:
+              $ref: '#/definitions/utils.BaseResponse-entities_LinkEntity'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Get many link belongs to a user inside a folder
+      tags:
+      - link
     post:
       consumes:
       - application/json
