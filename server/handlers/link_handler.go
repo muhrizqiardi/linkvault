@@ -184,3 +184,47 @@ func (l *LinkHandler) GetManyLinksInFolder(w http.ResponseWriter, r *http.Reques
 	utils.BaseResponseWriter(w, http.StatusOK, true, "Link(s) found", links)
 	return
 }
+
+// Update one link by ID
+//
+//	@Summary	Update one link by ID
+//	@Tags		link
+//	@Accept		json
+//	@Procedure	json
+//	@Param		linkId	path		string									true	"Link ID"
+//	@Param		payload	body		dtos.UpdateLinkDto						true	"Payload"
+//	@Success	200		{object}	utils.BaseResponse[entities.LinkEntity]	"Successfully updated a link"
+//	@Failure	400		{object}	utils.BaseResponse[any]					"Bad Request"
+//	@Failure	500		{object}	utils.BaseResponse[any]					"Internal Server Error"
+//	@Security	Bearer
+//	@Router		/links/{linkId} [patch]
+func (l *LinkHandler) UpdateLink(w http.ResponseWriter, r *http.Request) {
+	linkId, parseLinkIdErr := uuid.Parse(chi.URLParam(r, "linkId"))
+	if parseLinkIdErr != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
+		l.l.Println(parseLinkIdErr.Error())
+		return
+	}
+
+	validate := validator.New()
+	var payload dtos.UpdateLinkDto
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
+		l.l.Println(err)
+		return
+	}
+	if err := validate.Struct(payload); err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
+		l.l.Println(err.Error())
+		return
+	}
+
+	updatedLink, updateErr := l.linkService.UpdateOne(linkId, payload)
+	if updateErr != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
+		l.l.Println(updateErr.Error())
+		return
+	}
+
+	utils.BaseResponseWriter(w, http.StatusOK, true, "Successfully updated link", updatedLink)
+}
