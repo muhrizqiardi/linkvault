@@ -1,3 +1,4 @@
+import { LinkListCard } from '@/components/link-list-card';
 import { SidebarBase } from '@/components/sidebar-base';
 import { TopNavBase } from '@/components/top-nav-base';
 
@@ -10,6 +11,9 @@ export default function Home() {
         </div>
         <div className="border-r">
           <TopNavBase />
+          <div className="flex flex-col">
+            <LinkListCard />
+          </div>
         </div>
         <div className=""></div>
       </div>
