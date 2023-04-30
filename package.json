@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "dbmate": "^2.2.0"
+  },
+  "dependencies": {
+    "prettier": "^2.8.8"
   }
 }
