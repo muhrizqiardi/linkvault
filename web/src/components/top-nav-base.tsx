@@ -6,12 +6,30 @@ import {
   HiPlus,
 } from 'react-icons/hi2';
 import { Button } from './ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 
 export function TopNavBase() {
   const [isClientSide, setIsClientSide] = useState<boolean>(false);
+  const [orderedByValue, setOrderedByValue] = useState<
+    | 'title_ASC'
+    | 'title_DESC'
+    | 'createdAt_ASC'
+    | 'createdAt_DESC'
+    | 'updatedAt_ASC'
+    | 'updatedAt_DESC'
+    | string
+  >('updatedAt_DESC');
   useEffect(() => {
     setIsClientSide(true);
   }, []);
@@ -63,9 +81,41 @@ export function TopNavBase() {
             </div>
           </PopoverContent>
         </Popover>
-        <Button variant="outline" size="sm">
-          <HiBarsArrowDown />
-        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm">
+              <HiBarsArrowDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Order by</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup
+              value={orderedByValue}
+              onValueChange={setOrderedByValue}
+            >
+              <DropdownMenuRadioItem value="title_ASC">
+                Title (ascending)
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="title_DESC">
+                Title (descending)
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="createdAt_ASC">
+                Date created (ascending)
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="createdAt_DESC">
+                Date created (descending)
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="updatedAt_ASC">
+                Date modified (ascending)
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="updatedAt_DESC">
+                Date modified (descending)
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </nav>
     </header>
   );
