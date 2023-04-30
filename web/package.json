@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ladle/react": "^2.12.3",
+    "@radix-ui/react-dropdown-menu": "^2.0.4",
     "@radix-ui/react-label": "^2.0.1",
     "@radix-ui/react-navigation-menu": "^1.1.2",
     "@radix-ui/react-popover": "^1.0.5",
