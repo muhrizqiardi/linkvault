@@ -3,6 +3,7 @@ import {
   HiBarsArrowDown,
   HiChevronDoubleLeft,
   HiMagnifyingGlass,
+  HiPencil,
   HiPlus,
 } from 'react-icons/hi2';
 import { Button } from './ui/button';
@@ -42,6 +43,11 @@ export function TopNavBase() {
         <Button variant="outline" size="sm" className="mr-auto">
           <HiChevronDoubleLeft />
         </Button>
+
+        <Button variant="link" className="mr-auto">
+          Folder name <HiPencil className="ml-2" />
+        </Button>
+
         <Button variant="outline" size="sm" className="flex gap-4">
           <HiMagnifyingGlass />
           <span className="sr-only">Search</span>
