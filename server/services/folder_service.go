@@ -2,6 +2,8 @@ package services
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"log"
 	"server/dtos"
 	"server/entities"
@@ -25,7 +27,7 @@ func NewFolderService(ctx context.Context, l *log.Logger, pg *sqlx.DB) *FolderSe
 }
 
 // Create new folder
-func (fs *FolderService) Create(payload dtos.CreateFolderDto) (entities.FolderEntity, error) {
+func (fs *FolderService) Create(ownerId uuid.UUID, payload dtos.CreateFolderDto) (entities.FolderEntity, error) {
 	createNewFolderQuery := `
 		insert into public.folders (name, owner_id)
 			values ($1, $2)
@@ -33,11 +35,11 @@ func (fs *FolderService) Create(payload dtos.CreateFolderDto) (entities.FolderEn
 				id, name, owner_id, created_at, updated_at;`
 
 	var newFolder entities.FolderEntity
-	if err := fs.pg.Select(
+	if err := fs.pg.Get(
 		&newFolder,
 		createNewFolderQuery,
 		payload.Name,
-		payload.OwnerId,
+		ownerId.String(),
 	); err != nil {
 		return entities.FolderEntity{}, err
 	}
@@ -46,11 +48,39 @@ func (fs *FolderService) Create(payload dtos.CreateFolderDto) (entities.FolderEn
 }
 
 // Get many folders
-func (fs *FolderService) GetMany() ([]entities.FolderEntity, error) {
+func (fs *FolderService) GetManyBelongsToUser(ownerId uuid.UUID, orderBy string, limit int, page int) ([]entities.FolderEntity, error) {
 	getManyFoldersQuery := `
 		select id, name, owner_id, created_at, updated_at
-			from public.folders;
+			from public.folders
+			where owner_id = $1
+			order by %s
+			limit $2 offset $3;
 	`
+	switch orderBy {
+	case "name_ASC":
+		getManyFoldersQuery = fmt.Sprintf(getManyFoldersQuery, "name asc")
+		break
+	case "name_DESC":
+		getManyFoldersQuery = fmt.Sprintf(getManyFoldersQuery, "name desc")
+		break
+	case "createdAt_ASC":
+		getManyFoldersQuery = fmt.Sprintf(getManyFoldersQuery, "created_at asc")
+		break
+	case "createdAt_DESC":
+		getManyFoldersQuery = fmt.Sprintf(getManyFoldersQuery, "created_at desc")
+		break
+	case "updatedAt_ASC":
+		getManyFoldersQuery = fmt.Sprintf(getManyFoldersQuery, "updated_at asc")
+		break
+	case "updatedAt_DESC":
+		getManyFoldersQuery = fmt.Sprintf(getManyFoldersQuery, "updated_at desc")
+		break
+	case "":
+		getManyFoldersQuery = fmt.Sprintf(getManyFoldersQuery, "updated_at desc")
+		break
+	default:
+		return []entities.FolderEntity{}, errors.New("Invalid `orderBy` parameter")
+	}
 
 	var folders []entities.FolderEntity
 	if err := fs.pg.Select(
