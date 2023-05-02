@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import {
+  HiBars3,
   HiBarsArrowDown,
   HiChevronDoubleLeft,
   HiMagnifyingGlass,
   HiPencil,
   HiPlus,
 } from 'react-icons/hi2';
+import { SidebarSheet } from './sidebar-sheet';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -19,6 +21,7 @@ import {
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 
 export function TopNavBase() {
   const [isClientSide, setIsClientSide] = useState<boolean>(false);
@@ -40,9 +43,19 @@ export function TopNavBase() {
   return (
     <header className="flex h-14 items-center px-4 border-b">
       <nav className="w-full flex gap-2">
-        <Button variant="outline" size="sm" className="mr-auto">
+        <Button variant="outline" size="sm" className="mr-auto hidden lg:block">
           <HiChevronDoubleLeft />
         </Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="sm" className="mr-auto lg:hidden">
+              <HiBars3 />
+            </Button>
+          </SheetTrigger>
+          <SheetContent className="w-72" position="left">
+            <SidebarSheet />
+          </SheetContent>
+        </Sheet>
 
         <Button variant="link" className="mr-auto">
           Folder name <HiPencil className="ml-2" />
@@ -53,7 +66,7 @@ export function TopNavBase() {
           <span className="sr-only">Search</span>
         </Button>
         <Popover>
-          <PopoverTrigger>
+          <PopoverTrigger asChild>
             <Button variant="outline" size="sm">
               <HiPlus />
             </Button>
