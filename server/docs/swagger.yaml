@@ -9,6 +9,11 @@ definitions:
         minLength: 8
         type: string
     type: object
+  dtos.CreateFolderDto:
+    properties:
+      name:
+        type: string
+    type: object
   dtos.CreateLinkDto:
     properties:
       cover_url:
@@ -50,6 +55,23 @@ definitions:
     required:
     - cover_url
     - excerpt
+    type: object
+  entities.FolderEntity:
+    properties:
+      created_at:
+        format: date-time
+        type: string
+      id:
+        format: uuid
+        type: string
+      name:
+        type: string
+      owner_id:
+        format: uuid
+        type: string
+      updated_at:
+        format: date-time
+        type: string
     type: object
   entities.LinkEntity:
     properties:
@@ -113,6 +135,15 @@ definitions:
       success:
         type: boolean
     type: object
+  utils.BaseResponse-entities_FolderEntity:
+    properties:
+      data:
+        $ref: '#/definitions/entities.FolderEntity'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
   utils.BaseResponse-entities_LinkEntity:
     properties:
       data:
@@ -166,6 +197,72 @@ paths:
       summary: Log in to user account
       tags:
       - auth
+  /folders:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - default: updatedAt_DESC
+        description: Order by title, created date, or modified date
+        in: query
+        name: orderBy
+        type: string
+      - default: 10
+        description: Limit every page
+        in: query
+        name: limit
+        type: integer
+      - default: 1
+        description: Page count
+        in: query
+        name: page
+        type: integer
+      responses:
+        "201":
+          description: Folder(s) found
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-entities_FolderEntity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Get many folders belongs to user
+      tags:
+      - folder
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateFolderDto'
+      responses:
+        "201":
+          description: Successfully created a folder
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-entities_FolderEntity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Create a folder
+      tags:
+      - folder
   /folders/{folderId}/links:
     get:
       consumes:

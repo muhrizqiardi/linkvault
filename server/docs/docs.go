@@ -46,6 +46,110 @@ const docTemplate = `{
                 }
             }
         },
+        "/folders": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "folder"
+                ],
+                "summary": "Get many folders belongs to user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "updatedAt_DESC",
+                        "description": "Order by title, created date, or modified date",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit every page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page count",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Folder(s) found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-entities_FolderEntity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "folder"
+                ],
+                "summary": "Create a folder",
+                "parameters": [
+                    {
+                        "description": "Payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.CreateFolderDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created a folder",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-entities_FolderEntity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    }
+                }
+            }
+        },
         "/folders/{folderId}/links": {
             "get": {
                 "security": [
@@ -559,6 +663,14 @@ const docTemplate = `{
                 }
             }
         },
+        "dtos.CreateFolderDto": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "dtos.CreateLinkDto": {
             "type": "object",
             "required": [
@@ -616,6 +728,30 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "entities.FolderEntity": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner_id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "date-time"
                 }
             }
         },
@@ -700,6 +836,20 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/entities.UserEntity"
                     }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "utils.BaseResponse-entities_FolderEntity": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/entities.FolderEntity"
                 },
                 "message": {
                     "type": "string"
