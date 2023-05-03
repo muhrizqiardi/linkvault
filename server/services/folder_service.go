@@ -86,6 +86,9 @@ func (fs *FolderService) GetManyBelongsToUser(ownerId uuid.UUID, orderBy string,
 	if err := fs.pg.Select(
 		&folders,
 		getManyFoldersQuery,
+		ownerId.String(),
+		limit,
+		(page-1)*limit,
 	); err != nil {
 		return []entities.FolderEntity{}, err
 	}
