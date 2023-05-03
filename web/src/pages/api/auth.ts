@@ -24,7 +24,7 @@ export default async function handler(
             'Set-Cookie',
             `token=${responseBody.data}; expires=${
               new Date().getTime() + 1000 * 60 * 60 * 24 * 30 * 6
-            }`,
+            }; Path=/`,
           )
           .send({
             success: true,
@@ -45,14 +45,14 @@ export default async function handler(
             'Set-Cookie',
             `token=${req.cookies['token']}; expires=${
               new Date().getTime() + 1000 * 60 * 60 * 24 * 30 * 6
-            }`,
+            }; Path=/`,
           );
       } catch (error) {
         return res
           .status(401)
           .setHeader(
             'Set-Cookie',
-            'token=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT',
+            'token=deleted; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT',
           );
       }
     case 'DELETE':
@@ -60,7 +60,7 @@ export default async function handler(
         .status(401)
         .setHeader(
           'Set-Cookie',
-          'token=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT',
+          'token=deleted; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT',
         );
 
     default:
