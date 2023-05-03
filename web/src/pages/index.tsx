@@ -1,6 +1,21 @@
 import { LinkListCard } from '@/components/link-list-card';
 import { SidebarBase } from '@/components/sidebar-base';
 import { TopNavBase } from '@/components/top-nav-base';
+import { GetServerSideProps } from 'next';
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  if (context.req.cookies['token'])
+    return {
+      props: {},
+    };
+
+  return {
+    redirect: {
+      destination: '/sign-in',
+    },
+    props: {},
+  };
+};
 
 export default function Home() {
   return (
