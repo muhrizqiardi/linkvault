@@ -26,6 +26,14 @@ export function RegisterPageForm() {
         body: JSON.stringify(data),
       });
 
+      await fetch('/api/auth', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+        }),
+      });
+
       router.push('/');
     } catch (error) {
       setError(true, 'Failed to register user');
