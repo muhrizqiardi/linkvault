@@ -21,18 +21,22 @@ export function RegisterPageForm() {
   const onSubmit: SubmitHandler<RegisterPageFormDto> = async (data) => {
     setIsLoading(true);
     try {
-      await fetch('/api/users', {
+      const createUserResponse = await fetch('/api/users', {
         method: 'POST',
         body: JSON.stringify(data),
       });
 
-      await fetch('/api/auth', {
+      if (!createUserResponse.ok) throw new Error();
+
+      const signInResponse = await fetch('/api/auth', {
         method: 'POST',
         body: JSON.stringify({
           email: data.email,
           password: data.password,
         }),
       });
+
+      if (!signInResponse.ok) throw new Error();
 
       router.push('/');
     } catch (error) {

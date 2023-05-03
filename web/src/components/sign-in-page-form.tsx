@@ -21,11 +21,12 @@ export function SignInPageForm() {
   const onSubmit: SubmitHandler<SignInPageFormDto> = async (data) => {
     setIsLoading(true);
     try {
-      await fetch('/api/auth', {
+      const response = await fetch('/api/auth', {
         method: 'POST',
         body: JSON.stringify(data),
       });
 
+      if (!response.ok) throw new Error();
       router.push('/');
     } catch (error) {
       setError(true, 'Failed to sign in');
@@ -64,7 +65,7 @@ export function SignInPageForm() {
             {isLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : null}
-            Create account
+            Sign in
           </Button>
         </div>
       </form>
