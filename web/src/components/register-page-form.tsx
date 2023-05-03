@@ -7,10 +7,12 @@ import { Label } from './ui/label';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useError from '@/utils/use-error';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/router';
 
 export function RegisterPageForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { isError, setError } = useError(false);
+  const router = useRouter();
   const [isClientSide, setIsClientSide] = useState(false);
   const { register, handleSubmit } = useForm<RegisterPageFormDto>({
     resolver: zodResolver(registerPageFormDtoSchema),
@@ -18,12 +20,13 @@ export function RegisterPageForm() {
 
   const onSubmit: SubmitHandler<RegisterPageFormDto> = async (data) => {
     setIsLoading(true);
-    console.log('ill see you on the dark side of the moon');
     try {
       await fetch('/api/users', {
         method: 'POST',
         body: JSON.stringify(data),
       });
+
+      router.push('/');
     } catch (error) {
       setError(true, 'Failed to register user');
     } finally {
