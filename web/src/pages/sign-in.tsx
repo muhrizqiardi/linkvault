@@ -7,7 +7,22 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { GetServerSideProps } from 'next';
 import Link from 'next/link';
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  if (context.req.cookies['token'])
+    return {
+      redirect: {
+        destination: '/',
+      },
+      props: {},
+    };
+
+  return {
+    props: {},
+  };
+};
 
 export default function SignInPage() {
   return (
