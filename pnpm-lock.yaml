@@ -13,6 +13,7 @@ importers:
 
   web:
     specifiers:
+      '@hookform/resolvers': ^3.1.0
       '@ladle/react': ^2.12.3
       '@radix-ui/react-context-menu': ^2.1.3
       '@radix-ui/react-dialog': ^1.0.3
@@ -28,6 +29,7 @@ importers:
       autoprefixer: 10.4.14
       class-variance-authority: ^0.6.0
       clsx: ^1.2.1
+      envsafe: ^2.0.3
       eslint: 8.38.0
       eslint-config-next: 13.3.0
       lucide-react: ^0.188.0
@@ -35,12 +37,15 @@ importers:
       postcss: 8.4.22
       react: 18.2.0
       react-dom: 18.2.0
+      react-hook-form: ^7.43.9
       react-icons: ^4.8.0
       tailwind-merge: ^1.12.0
       tailwindcss: 3.3.1
       tailwindcss-animate: ^1.0.5
       typescript: 5.0.4
+      zod: ^3.21.4
     dependencies:
+      '@hookform/resolvers': 3.1.0_react-hook-form@7.43.9
       '@ladle/react': 2.12.3_et4sfiewch6kd472reorarpuoy
       '@radix-ui/react-context-menu': 2.1.3_7geocmx3442bocz6x6zwg5lxxi
       '@radix-ui/react-dialog': 1.0.3_7geocmx3442bocz6x6zwg5lxxi
@@ -56,6 +61,7 @@ importers:
       autoprefixer: 10.4.14_postcss@8.4.22
       class-variance-authority: 0.6.0_typescript@5.0.4
       clsx: 1.2.1
+      envsafe: 2.0.3
       eslint: 8.38.0
       eslint-config-next: 13.3.0_voubu7prgxjfsfbgx5d4sqnwiy
       lucide-react: 0.188.0_react@18.2.0
@@ -63,11 +69,13 @@ importers:
       postcss: 8.4.22
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-hook-form: 7.43.9_react@18.2.0
       react-icons: 4.8.0_react@18.2.0
       tailwind-merge: 1.12.0
       tailwindcss: 3.3.1_postcss@8.4.22
       tailwindcss-animate: 1.0.5_tailwindcss@3.3.1
       typescript: 5.0.4
+      zod: 3.21.4
 
 packages:
 
@@ -623,6 +631,14 @@ packages:
       use-isomorphic-layout-effect: 1.1.2_yuz6bkerhkjfjuf6zeb7j6ybc4
     transitivePeerDependencies:
       - '@types/react'
+    dev: false
+
+  /@hookform/resolvers/3.1.0_react-hook-form@7.43.9:
+    resolution: {integrity: sha512-z0A8K+Nxq+f83Whm/ajlwE6VtQlp/yPHZnXw7XWVPIGm1Vx0QV8KThU3BpbBRfAZ7/dYqCKKBNnQh85BkmBKkA==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.43.9_react@18.2.0
     dev: false
 
   /@humanwhocodes/config-array/0.11.8:
@@ -2369,6 +2385,11 @@ packages:
     dependencies:
       graceful-fs: 4.2.11
       tapable: 2.2.1
+    dev: false
+
+  /envsafe/2.0.3:
+    resolution: {integrity: sha512-51lek8h5btjXhXUDW//Pno7HPydM1WQzltOb1/ONRKdwB2QkfAURnN4Qn0cJ5LzGvX2Km1ReR2O3K3Bqq9sBMg==}
+    engines: {node: '>=10'}
     dev: false
 
   /es-abstract/1.21.2:
@@ -4843,6 +4864,15 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
+  /react-hook-form/7.43.9_react@18.2.0:
+    resolution: {integrity: sha512-AUDN3Pz2NSeoxQ7Hs6OhQhDr6gtF9YRuutGDwPQqhSUAHJSgGl2VeY3qN19MG0SucpjgDiuMJ4iC5T5uB+eaNQ==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /react-icons/4.8.0_react@18.2.0:
     resolution: {integrity: sha512-N6+kOLcihDiAnj5Czu637waJqSnwlMNROzVZMhfX68V/9bu9qHaMIJC4UdozWoOk57gahFCNHwVvWzm0MTzRjg==}
     peerDependencies:
@@ -5846,6 +5876,10 @@ packages:
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+    dev: false
+
+  /zod/3.21.4:
+    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
   /zwitch/2.0.4:
