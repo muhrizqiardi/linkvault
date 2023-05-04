@@ -37,6 +37,29 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
+// Get whether token is valid or not
+//
+//	@Summary	Get whether token is valid or not
+//	@Tags		auth
+//	@Produce	json
+//	@Success	200		{object}	utils.BaseResponse[any]
+//	@Router		/auth [post]
+func (ah *AuthHandler) CheckTokenIsValid(w http.ResponseWriter, r *http.Request) {
+	_, ok := r.Context().Value("user").(*Claims)
+	if !ok {
+		utils.BaseResponseWriter[any](w, http.StatusUnauthorized, false, "Unauthorized", nil)
+		ah.l.Println("Invalid JWT")
+		return
+	}
+
+	// TODO: get user by ID to validate whether it exists or not
+
+	utils.BaseResponseWriter[any](w, http.StatusOK, true, "Token is valid", nil)
+	return
+}
+
+// Log in to user account
+//
 //	@Summary	Log in to user account
 //	@Tags		auth
 //	@Produce	json
