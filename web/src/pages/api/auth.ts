@@ -17,6 +17,9 @@ export default async function handler(
             'Content-Type': 'application/json',
           },
         });
+
+        if (!response.ok) throw new Error();
+
         const responseBody = await response.json();
         return res
           .status(201)
