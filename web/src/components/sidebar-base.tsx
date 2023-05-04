@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { cn } from '@/utils/cn';
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
