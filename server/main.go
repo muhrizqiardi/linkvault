@@ -20,14 +20,14 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-//	@title						LinkVault API
-//	@version					1.0
-//	@description				Docs for LinkVault API
-//	@host						localhost:9000
-//	@BasePath					/
-//	@securityDefinitions.apikey	Bearer
-//	@in							header
-//	@name						Authorization
+// @title						LinkVault API
+// @version					1.0
+// @description				Docs for LinkVault API
+// @host						localhost:9000
+// @BasePath					/
+// @securityDefinitions.apikey	Bearer
+// @in							header
+// @name						Authorization
 func main() {
 	l := log.New(os.Stdout, "", log.LstdFlags)
 
@@ -75,6 +75,8 @@ func main() {
 	// Protected
 	r.Group(func(r chi.Router) {
 		r.Use(middlewares.JwtAuth(ctx, l, pg))
+
+		r.Get("/auth", authHandler.CheckTokenIsValid)
 
 		r.Get("/users/{userId}", userHandler.GetOneUserById)
 		r.Patch("/users/{userId}", userHandler.UpdateOneUserById)
