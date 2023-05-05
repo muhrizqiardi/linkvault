@@ -10,6 +10,23 @@
     "basePath": "/",
     "paths": {
         "/auth": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Get whether token is valid or not",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-entities_UserEntity"
+                        }
+                    }
+                }
+            },
             "post": {
                 "produces": [
                     "application/json"

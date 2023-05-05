@@ -179,6 +179,17 @@ info:
   version: "1.0"
 paths:
   /auth:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-entities_UserEntity'
+      summary: Get whether token is valid or not
+      tags:
+      - auth
     post:
       parameters:
       - description: Login params
