@@ -21,7 +21,7 @@ export default async function handler(
         if (!response.ok) throw new Error();
 
         const responseBody = await response.json();
-        return res
+        res
           .status(201)
           .setHeader(
             'Set-Cookie',
@@ -34,10 +34,9 @@ export default async function handler(
             message: 'Successfully signed in',
           });
       } catch (error) {
-        return res
-          .status(401)
-          .send({ success: false, message: 'Failed to sign in' });
+        res.status(401).send({ success: false, message: 'Failed to sign in' });
       }
+      break;
     case 'GET':
       try {
         if (req.cookies['token'] === undefined || req.cookies['token'] === null)
@@ -54,7 +53,7 @@ export default async function handler(
         if (!response.ok) throw new Error();
         const responseBody = await response.json();
 
-        return res
+        res
           .status(200)
           .setHeader(
             'Set-Cookie',
@@ -64,25 +63,28 @@ export default async function handler(
           )
           .send(responseBody.data);
       } catch (error) {
-        return res
+        res
           .status(401)
           .setHeader(
             'Set-Cookie',
             'token=deleted; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT',
           );
       }
+      break;
     case 'DELETE':
-      return res
+      res
         .status(401)
         .setHeader(
           'Set-Cookie',
           'token=deleted; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT',
         );
+      break;
 
     default:
-      return res.status(200).send({
+      res.status(200).send({
         success: true,
         message: 'Not Found',
       });
+      break;
   }
 }
