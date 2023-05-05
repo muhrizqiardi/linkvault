@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"server/dtos"
+	"server/entities"
 	"server/utils"
 	"time"
 
@@ -42,19 +43,29 @@ type Claims struct {
 //	@Summary	Get whether token is valid or not
 //	@Tags		auth
 //	@Produce	json
-//	@Success	200		{object}	utils.BaseResponse[any]
-//	@Router		/auth [post]
+//	@Success	200	{object}	utils.BaseResponse[entities.UserEntity]
+//	@Router		/auth [get]
 func (ah *AuthHandler) CheckTokenIsValid(w http.ResponseWriter, r *http.Request) {
-	_, ok := r.Context().Value("user").(*Claims)
+	userClaims, ok := r.Context().Value("user").(*Claims)
 	if !ok {
 		utils.BaseResponseWriter[any](w, http.StatusUnauthorized, false, "Unauthorized", nil)
 		ah.l.Println("Invalid JWT")
 		return
 	}
 
-	// TODO: get user by ID to validate whether it exists or not
+	getOneUserByIdQuery := `
+		select id, email, full_name, password, created_at, updated_at from public.users 
+		    where id = $1;
+	`
 
-	utils.BaseResponseWriter[any](w, http.StatusOK, true, "Token is valid", nil)
+	var user entities.UserEntity
+	if dbErr := ah.pg.QueryRowx(getOneUserByIdQuery, userClaims.UserId).StructScan(&user); dbErr != nil {
+		utils.BaseResponseWriter[any](w, http.StatusUnauthorized, false, "Unauthorized", nil)
+		ah.l.Println("User not found")
+		return
+	}
+
+	utils.BaseResponseWriter(w, http.StatusOK, true, "Token is valid", user)
 	return
 }
 
