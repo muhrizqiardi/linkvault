@@ -1,7 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/utils/cn';
+import { Suspense } from 'react';
 import { HiEllipsisVertical, HiFolder, HiHome } from 'react-icons/hi2';
-import SidebarBaseFolderList from './sidebar-base-folder-list';
+import SidebarBaseFolderList, {
+  SidebarBaseFolderListSkeleton,
+} from './sidebar-base-folder-list';
 import { SidebarBaseUserDropdownMenu } from './sidebar-base-user-dropdown-menu';
 
 interface SidebarBaseProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -24,7 +27,9 @@ export function SidebarBase({ className }: SidebarBaseProps) {
           </div>
         </div>
 
-        <SidebarBaseFolderList />
+        <Suspense fallback={<SidebarBaseFolderListSkeleton />}>
+          <SidebarBaseFolderList />
+        </Suspense>
 
         <div className="px-4 py-2">
           <div className="flex justify-between items-center">
