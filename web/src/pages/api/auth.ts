@@ -40,8 +40,20 @@ export default async function handler(
       }
     case 'GET':
       try {
-        if (!req.cookies['token']) throw new Error('Unauthorized');
-        // TODO: fetch GET /auth to check the validity of the token received
+        if (req.cookies['token'] === undefined || req.cookies['token'] === null)
+          throw new Error('Unauthorized');
+
+        const response = await fetch(`${env.API_URL}/auth`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${req.cookies.token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) throw new Error();
+        const responseBody = await response.json();
+
         return res
           .status(200)
           .setHeader(
@@ -49,7 +61,8 @@ export default async function handler(
             `token=${req.cookies['token']}; expires=${
               new Date().getTime() + 1000 * 60 * 60 * 24 * 30 * 6
             }; Path=/`,
-          );
+          )
+          .send(responseBody.data);
       } catch (error) {
         return res
           .status(401)
