@@ -20,14 +20,14 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// @title						LinkVault API
-// @version					1.0
-// @description				Docs for LinkVault API
-// @host						localhost:9000
-// @BasePath					/
-// @securityDefinitions.apikey	Bearer
-// @in							header
-// @name						Authorization
+//	@title						LinkVault API
+//	@version					1.0
+//	@description				Docs for LinkVault API
+//	@host						localhost:9000
+//	@BasePath					/
+//	@securityDefinitions.apikey	Bearer
+//	@in							header
+//	@name						Authorization
 func main() {
 	l := log.New(os.Stdout, "", log.LstdFlags)
 
