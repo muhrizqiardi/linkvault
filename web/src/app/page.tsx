@@ -9,7 +9,9 @@ export default async function HomePage() {
         <SidebarBase className="border-r hidden lg:block" />
       </div>
       <div className="border-r">
-        <TopNavBase />
+        <div className="h-14">
+          <TopNavBase />
+        </div>
         <div className="flex flex-col">
           <LinkListCard />
         </div>
