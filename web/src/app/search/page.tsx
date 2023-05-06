@@ -1,6 +1,5 @@
 import { LinkListCard } from '@/components/link-list-card';
 import { SidebarBase } from '@/components/sidebar-base';
-import { TopNavBase } from '@/components/top-nav-base';
 import TopNavSearch from '@/components/top-nav-search';
 
 export default function SearchPage() {
@@ -11,7 +10,9 @@ export default function SearchPage() {
           <SidebarBase className="border-r" />
         </div>
         <div className="border-r">
-          <TopNavSearch />
+          <div className="h-14">
+            <TopNavSearch />
+          </div>
           <div className="flex flex-col">
             <LinkListCard />
           </div>
