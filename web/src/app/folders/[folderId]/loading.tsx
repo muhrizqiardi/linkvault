@@ -1,4 +1,4 @@
-import { LinkListCardSkeleton } from '@/components/link-list-card';
+import { LinkListCardSkeleton } from '@/components/link-list-card-skeleton';
 import { TopNavFolderPageSkeleton } from '@/components/top-nav-folder-page-skeleton';
 
 export default function FolderPageLoading() {
