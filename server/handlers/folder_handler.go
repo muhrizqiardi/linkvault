@@ -124,10 +124,10 @@ func (fh *FolderHandler) GetManyFoldersBelongsToUser(w http.ResponseWriter, r *h
 //	@Tags		folder
 //	@Accept		json
 //	@Procedure	json
-//	@Param		folderId	path	string	true	"Folder id"
-//	@Success	201		{object}	utils.BaseResponse[entities.FolderEntity]	"Folder(s) found"
-//	@Failure	400		{object}	utils.BaseResponse[any]						"Bad Request"
-//	@Failure	500		{object}	utils.BaseResponse[any]						"Internal Server Error"
+//	@Param		folderId	path		string										true	"Folder id"
+//	@Success	201			{object}	utils.BaseResponse[entities.FolderEntity]	"Folder(s) found"
+//	@Failure	400			{object}	utils.BaseResponse[any]						"Bad Request"
+//	@Failure	500			{object}	utils.BaseResponse[any]						"Internal Server Error"
 //	@Security	Bearer
 //	@Router		/folders [get]
 func (fh *FolderHandler) GetFolderDetailBelongsToUser(w http.ResponseWriter, r *http.Request) {
@@ -141,5 +141,56 @@ func (fh *FolderHandler) GetFolderDetailBelongsToUser(w http.ResponseWriter, r *
 	}
 
 	utils.BaseResponseWriter(w, http.StatusOK, true, "Folder found", folderDetail)
+	return
+}
+
+// Update folder detail
+//
+//	@Summary	Update folder detail
+//	@Tags		folder
+//	@Accept		json
+//	@Procedure	json
+//	@Param		folderId	path		string										true	"Folder ID"
+//	@Param		body		body		dtos.UpdateFolderDto						true	"Update folder payload"
+//	@Success	201			{object}	utils.BaseResponse[entities.FolderEntity]	"Folder(s) found"
+//	@Failure	400			{object}	utils.BaseResponse[any]						"Bad Request"
+//	@Failure	500			{object}	utils.BaseResponse[any]						"Internal Server Error"
+//	@Security	Bearer
+//	@Router		/folders/{folderId} [patch]
+func (fh *FolderHandler) UpdateFolderDetailBelongsToUser(w http.ResponseWriter, r *http.Request) {
+	folderId, err := uuid.Parse(chi.URLParam(r, "folderId"))
+	if err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusUnauthorized, false, "Unauthorized", nil)
+		fh.l.Println(err.Error())
+		return
+	}
+	_, ok := r.Context().Value("user").(*Claims)
+	if !ok {
+		utils.BaseResponseWriter[any](w, http.StatusUnauthorized, false, "Unauthorized", nil)
+		fh.l.Println("Invalid JWT")
+		return
+	}
+
+	validate := validator.New()
+	var payload dtos.UpdateFolderDto
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
+		fh.l.Println(err.Error())
+		return
+	}
+	if err := validate.Struct(payload); err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
+		fh.l.Println(err.Error())
+		return
+	}
+
+	updatedFolder, err := fh.folderService.UpdateOne(folderId, payload)
+	if err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusInternalServerError, false, "Internal Server Error", nil)
+		fh.l.Println(err.Error())
+		return
+	}
+
+	utils.BaseResponseWriter(w, http.StatusOK, true, "Folder detail updated", updatedFolder)
 	return
 }

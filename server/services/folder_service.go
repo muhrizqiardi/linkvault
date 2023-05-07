@@ -120,8 +120,7 @@ func (fs *FolderService) UpdateOne(folderId uuid.UUID, payload dtos.UpdateFolder
 	updateOneFolderQuery := `
 		update public.folders
 			set
-				name = coalesce($1, name),
-				owner_id = coalesce($2, owner_id),
+				name = coalesce($2, name),
 				updated_at = current_timestamp
 			where 
 				id = $1
@@ -130,11 +129,11 @@ func (fs *FolderService) UpdateOne(folderId uuid.UUID, payload dtos.UpdateFolder
 	`
 
 	var updatedFolder entities.FolderEntity
-	if err := fs.pg.Select(
+	if err := fs.pg.Get(
 		&updatedFolder,
 		updateOneFolderQuery,
+		folderId.String(),
 		payload.Name,
-		payload.OwnerId.String(),
 	); err != nil {
 		return entities.FolderEntity{}, err
 	}
