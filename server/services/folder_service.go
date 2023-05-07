@@ -105,7 +105,7 @@ func (fs *FolderService) GetOne(folderId uuid.UUID) (entities.FolderEntity, erro
 	`
 
 	var folder entities.FolderEntity
-	if err := fs.pg.Select(
+	if err := fs.pg.Get(
 		&folder,
 		getOneFolderQuery,
 		folderId.String(),
