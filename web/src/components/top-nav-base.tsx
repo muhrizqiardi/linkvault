@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import {
   HiBars3,
@@ -10,7 +11,7 @@ import {
   HiPlus,
 } from 'react-icons/hi2';
 import { SidebarSheet } from './sidebar-sheet';
-import { Button } from './ui/button';
+import { Button, buttonVariants } from './ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,10 +64,16 @@ export function TopNavBase() {
           Folder name <HiPencil className="ml-2" />
         </Button>
 
-        <Button variant="outline" size="sm" className="flex gap-4">
+        <Link
+          className={`${buttonVariants({
+            variant: 'outline',
+            size: 'sm',
+          })} flex gap-4`}
+          href="/search"
+        >
           <HiMagnifyingGlass />
           <span className="sr-only">Search</span>
-        </Button>
+        </Link>
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm">
