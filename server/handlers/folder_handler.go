@@ -11,6 +11,7 @@ import (
 	"server/utils"
 	"strconv"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 )
@@ -114,5 +115,31 @@ func (fh *FolderHandler) GetManyFoldersBelongsToUser(w http.ResponseWriter, r *h
 	}
 
 	utils.BaseResponseWriter(w, http.StatusOK, true, "Folder(s) found", folders)
+	return
+}
+
+// Get details about a folder belongs to user
+//
+//	@Summary	Get details about a folder belongs to user
+//	@Tags		folder
+//	@Accept		json
+//	@Procedure	json
+//	@Param		folderId	path	string	true	"Folder id"
+//	@Success	201		{object}	utils.BaseResponse[entities.FolderEntity]	"Folder(s) found"
+//	@Failure	400		{object}	utils.BaseResponse[any]						"Bad Request"
+//	@Failure	500		{object}	utils.BaseResponse[any]						"Internal Server Error"
+//	@Security	Bearer
+//	@Router		/folders [get]
+func (fh *FolderHandler) GetFolderDetailBelongsToUser(w http.ResponseWriter, r *http.Request) {
+	folderId := chi.URLParam(r, "folderId")
+
+	folderDetail, err := fh.folderService.GetOne(uuid.MustParse(folderId))
+	if err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
+		fh.l.Println(err.Error())
+		return
+	}
+
+	utils.BaseResponseWriter(w, http.StatusOK, true, "Folder found", folderDetail)
 	return
 }

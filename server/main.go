@@ -20,14 +20,14 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-//	@title						LinkVault API
-//	@version					1.0
-//	@description				Docs for LinkVault API
-//	@host						localhost:9000
-//	@BasePath					/
-//	@securityDefinitions.apikey	Bearer
-//	@in							header
-//	@name						Authorization
+// @title						LinkVault API
+// @version					1.0
+// @description				Docs for LinkVault API
+// @host						localhost:9000
+// @BasePath					/
+// @securityDefinitions.apikey	Bearer
+// @in							header
+// @name						Authorization
 func main() {
 	l := log.New(os.Stdout, "", log.LstdFlags)
 
@@ -84,6 +84,7 @@ func main() {
 
 		r.Post("/folders", folderHandler.CreateFolder)
 		r.Get("/folders", folderHandler.GetManyFoldersBelongsToUser)
+		r.Get("/folders/{folderId}", folderHandler.GetFolderDetailBelongsToUser)
 
 		r.Post("/folders/{folderId}/links", linkHanlder.CreateLink)
 		r.Get("/links", linkHanlder.GetManyLinks)
