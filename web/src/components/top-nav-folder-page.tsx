@@ -1,5 +1,6 @@
 'use client';
 
+import { FolderEntity } from '@/entities';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import {
@@ -25,8 +26,26 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
+import { Skeleton } from './ui/skeleton';
 
-export function TopNavFolderPage() {
+interface TopNavFolderPageProps {
+  folderDetail: FolderEntity;
+}
+
+export function TopNavFolderPageSkeleton() {
+  return (
+    <div className="flex h-14 items-center px-4 border-b">
+      <div className="w-full flex items-center gap-2">
+        <Skeleton className="h-4 w-48 mx-auto" />
+        <Skeleton className="h-9 w-9" />
+        <Skeleton className="h-9 w-9" />
+        <Skeleton className="h-9 w-9" />
+      </div>
+    </div>
+  );
+}
+
+export function TopNavFolderPage(props: TopNavFolderPageProps) {
   const [isClientSide, setIsClientSide] = useState<boolean>(false);
   const [orderedByValue, setOrderedByValue] = useState<
     | 'title_ASC'
@@ -45,7 +64,7 @@ export function TopNavFolderPage() {
 
   return (
     <header className="flex h-14 items-center px-4 border-b">
-      <nav className="w-full flex gap-2">
+      <nav className="w-full flex gap-2 items-center">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="sm" className="mr-auto lg:hidden">
@@ -58,7 +77,9 @@ export function TopNavFolderPage() {
         </Sheet>
 
         <Button variant="link" justify="start" className="mx-auto">
-          Folder name <HiPencil className="ml-2" />
+          <>
+            {props.folderDetail.name} <HiPencil className="ml-2" />
+          </>
         </Button>
 
         <Link
