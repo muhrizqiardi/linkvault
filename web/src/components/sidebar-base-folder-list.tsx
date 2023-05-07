@@ -1,10 +1,11 @@
 import { folderEntitySchema } from '@/entities';
 import { HiEllipsisVertical, HiFolder, HiFolderPlus } from 'react-icons/hi2';
-import { Button } from './ui/button';
+import { Button, buttonVariants } from './ui/button';
 import { Skeleton } from './ui/skeleton';
 import { cookies } from 'next/headers';
 import { env } from '@/utils/env';
 import * as z from 'zod';
+import Link from 'next/link';
 
 const getFolders = async () => {
   try {
@@ -47,10 +48,10 @@ export default async function SidebarBaseFolderList() {
         <div className="flex justify-between items-center">
           <h2 className="px-2 text-lg font-semibold tracking-tight">Folders</h2>
           <div className="flex gap-1">
-            <Button variant="outline" size="sm">
+            <Button variant="ghost" size="sm" className="rounded-full h-9 w-9">
               <HiEllipsisVertical />
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="ghost" size="sm" className="rounded-full h-9 w-9">
               <HiFolderPlus />
             </Button>
           </div>
@@ -60,17 +61,22 @@ export default async function SidebarBaseFolderList() {
             <p className="text-sm">You haven't created any folder.</p>
           </div>
         ) : null}
-        <div className="space-y-1 py-2">
+        <div className="space-y-1 py-2 flex flex-col">
           {folders.map((folder, index) => (
-            <Button
+            <Link
               key={index}
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start"
+              href={`/folders/${folder.id}`}
+              className={
+                buttonVariants({
+                  variant: 'ghost',
+                  size: 'sm',
+                  justify: 'start',
+                }) + 'w-full'
+              }
             >
               <HiFolder className="mr-2 h-4 w-4" />
               {folder.name}
-            </Button>
+            </Link>
           ))}
         </div>
       </div>
