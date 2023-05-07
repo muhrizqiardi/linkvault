@@ -80,7 +80,7 @@ export default async function SidebarBaseFolderList() {
 }
 
 export const SidebarBaseFolderListSkeleton = () => (
-  <div className="px4 py-2">
+  <div className="px-4 py-2">
     <div className="flex justify-between items-center">
       <h2 className="px-2 text-lg font-semibold tracking-tight">Folders</h2>
       <div className="flex gap-1">
