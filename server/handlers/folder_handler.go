@@ -129,7 +129,7 @@ func (fh *FolderHandler) GetManyFoldersBelongsToUser(w http.ResponseWriter, r *h
 //	@Failure	400			{object}	utils.BaseResponse[any]						"Bad Request"
 //	@Failure	500			{object}	utils.BaseResponse[any]						"Internal Server Error"
 //	@Security	Bearer
-//	@Router		/folders [get]
+//	@Router		/folders/{folderId} [get]
 func (fh *FolderHandler) GetFolderDetailBelongsToUser(w http.ResponseWriter, r *http.Request) {
 	folderId := chi.URLParam(r, "folderId")
 
@@ -192,5 +192,31 @@ func (fh *FolderHandler) UpdateFolderDetailBelongsToUser(w http.ResponseWriter, 
 	}
 
 	utils.BaseResponseWriter(w, http.StatusOK, true, "Folder detail updated", updatedFolder)
+	return
+}
+
+// Delete a folder
+//
+//	@Summary	Delete a folder
+//	@Tags		folder
+//	@Accept		json
+//	@Procedure	json
+//	@Param		folderId	path		string										true	"Folder ID"
+//	@Success	200			{object}	utils.BaseResponse[entities.FolderEntity]	"Folder deleted"
+//	@Failure	400			{object}	utils.BaseResponse[any]						"Bad Request"
+//	@Failure	500			{object}	utils.BaseResponse[any]						"Internal Server Error"
+//	@Security	Bearer
+//	@Router		/folders/{folderId} [delete]
+func (fh *FolderHandler) DeleteFolderBelongsToUser(w http.ResponseWriter, r *http.Request) {
+	folderId := chi.URLParam(r, "folderId")
+
+	deletedFolder, err := fh.folderService.DeleteOne(uuid.MustParse(folderId))
+	if err != nil {
+		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
+		fh.l.Println(err.Error())
+		return
+	}
+
+	utils.BaseResponseWriter(w, http.StatusOK, true, "Folder deleted", deletedFolder)
 	return
 }

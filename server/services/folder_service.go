@@ -144,11 +144,13 @@ func (fs *FolderService) UpdateOne(folderId uuid.UUID, payload dtos.UpdateFolder
 func (fs *FolderService) DeleteOne(folderId uuid.UUID) (entities.FolderEntity, error) {
 	deleteOneFolderQuery := `
 		delete from public.folders
-			where id = $1;
+			where id = $1
+			returning
+				id, name, owner_id, created_at, updated_at;
 	`
 
 	var deletedFolder entities.FolderEntity
-	if err := fs.pg.Select(
+	if err := fs.pg.Get(
 		&deletedFolder,
 		deleteOneFolderQuery,
 		folderId.String(),

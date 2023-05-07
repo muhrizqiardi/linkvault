@@ -86,6 +86,7 @@ func main() {
 		r.Get("/folders", folderHandler.GetManyFoldersBelongsToUser)
 		r.Get("/folders/{folderId}", folderHandler.GetFolderDetailBelongsToUser)
 		r.Patch("/folders/{folderId}", folderHandler.UpdateFolderDetailBelongsToUser)
+		r.Delete("/folders/{folderId}", folderHandler.DeleteFolderBelongsToUser)
 
 		r.Post("/folders/{folderId}/links", linkHanlder.CreateLink)
 		r.Get("/links", linkHanlder.GetManyLinks)

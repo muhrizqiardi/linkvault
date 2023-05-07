@@ -76,14 +76,28 @@ const docTemplate = `{
                 "tags": [
                     "folder"
                 ],
-                "summary": "Get details about a folder belongs to user",
+                "summary": "Get many folders belongs to user",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Folder id",
-                        "name": "folderId",
-                        "in": "path",
-                        "required": true
+                        "default": "updatedAt_DESC",
+                        "description": "Order by title, created date, or modified date",
+                        "name": "orderBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit every page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page count",
+                        "name": "page",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -154,6 +168,92 @@ const docTemplate = `{
             }
         },
         "/folders/{folderId}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "folder"
+                ],
+                "summary": "Get details about a folder belongs to user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Folder id",
+                        "name": "folderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Folder(s) found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-entities_FolderEntity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "folder"
+                ],
+                "summary": "Delete a folder",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Folder ID",
+                        "name": "folderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Folder deleted",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-entities_FolderEntity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.BaseResponse-any"
+                        }
+                    }
+                }
+            },
             "patch": {
                 "security": [
                     {

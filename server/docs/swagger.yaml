@@ -218,11 +218,21 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Folder id
-        in: path
-        name: folderId
-        required: true
+      - default: updatedAt_DESC
+        description: Order by title, created date, or modified date
+        in: query
+        name: orderBy
         type: string
+      - default: 10
+        description: Limit every page
+        in: query
+        name: limit
+        type: integer
+      - default: 1
+        description: Page count
+        in: query
+        name: page
+        type: integer
       responses:
         "201":
           description: Folder(s) found
@@ -238,7 +248,7 @@ paths:
             $ref: '#/definitions/utils.BaseResponse-any'
       security:
       - Bearer: []
-      summary: Get details about a folder belongs to user
+      summary: Get many folders belongs to user
       tags:
       - folder
     post:
@@ -270,6 +280,60 @@ paths:
       tags:
       - folder
   /folders/{folderId}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Folder ID
+        in: path
+        name: folderId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Folder deleted
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-entities_FolderEntity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Delete a folder
+      tags:
+      - folder
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Folder id
+        in: path
+        name: folderId
+        required: true
+        type: string
+      responses:
+        "201":
+          description: Folder(s) found
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-entities_FolderEntity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Get details about a folder belongs to user
+      tags:
+      - folder
     patch:
       consumes:
       - application/json
