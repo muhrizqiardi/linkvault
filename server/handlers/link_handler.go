@@ -151,6 +151,7 @@ func (l *LinkHandler) GetManyLinks(w http.ResponseWriter, r *http.Request) {
 //	@Router		/folders/{folderId}/links [get]
 func (l *LinkHandler) GetManyLinksInFolder(w http.ResponseWriter, r *http.Request) {
 	userClaim, _ := r.Context().Value("user").(*Claims)
+	folderId := chi.URLParam(r, "folderId")
 	title := r.URL.Query().Get("title")
 	excerpt := r.URL.Query().Get("excerpt")
 	orderBy := r.URL.Query().Get("orderBy")
@@ -169,7 +170,7 @@ func (l *LinkHandler) GetManyLinksInFolder(w http.ResponseWriter, r *http.Reques
 	if err != nil {
 		page = defaultPage
 	}
-	links, err := l.linkService.GetManyBelongsToUser(uuid.MustParse(userClaim.UserId), title, excerpt, orderBy, limit, page)
+	links, err := l.linkService.GetManyBelongsToUserInFolder(uuid.MustParse(userClaim.UserId), uuid.MustParse(folderId), title, excerpt, orderBy, limit, page)
 	if err != nil {
 		utils.BaseResponseWriter[any](w, http.StatusInternalServerError, false, "Internal Server Error", nil)
 		l.l.Println(err.Error())

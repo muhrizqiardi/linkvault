@@ -116,8 +116,8 @@ func (ls *LinkService) GetManyBelongsToUserInFolder(ownerId uuid.UUID, folderId 
 			where 
 				owner_id = $1 and
 				folder_id = $2 and
-				($3::text is null or $3 = '' or excerpt ilike $3) and
-				($4::text is null or $4 = '' or title ilike $4)
+				($3::text is null or $3 = '' or title ilike $3) and
+				($4::text is null or $4 = '' or excerpt ilike $4)
 			order by %s 
 			limit $5 offset $6;
 	`
@@ -147,7 +147,7 @@ func (ls *LinkService) GetManyBelongsToUserInFolder(ownerId uuid.UUID, folderId 
 	}
 
 	var links []entities.LinkEntity
-	if err := ls.pg.Select(&links, getManyLinkQuery, ownerId.String(), title, excerpt, limit, (page-1)*limit); err != nil {
+	if err := ls.pg.Select(&links, getManyLinkQuery, ownerId.String(), folderId, title, excerpt, limit, (page-1)*limit); err != nil {
 		return []entities.LinkEntity{}, err
 	}
 	return links, nil
