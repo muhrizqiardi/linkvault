@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import { env } from '@/utils/env';
 import * as z from 'zod';
 import Link from 'next/link';
+import { LinkWithActiveStyle } from './link-with-active-style';
 
 const getFolders = async () => {
   try {
@@ -63,7 +64,7 @@ export default async function SidebarBaseFolderList() {
         ) : null}
         <div className="space-y-1 py-2 flex flex-col">
           {folders.map((folder, index) => (
-            <Link
+            <LinkWithActiveStyle
               key={index}
               href={`/folders/${folder.id}`}
               className={
@@ -71,12 +72,19 @@ export default async function SidebarBaseFolderList() {
                   variant: 'ghost',
                   size: 'sm',
                   justify: 'start',
-                }) + 'w-full'
+                }) + ' w-full'
+              }
+              activeClassName={
+                buttonVariants({
+                  variant: 'secondary',
+                  size: 'sm',
+                  justify: 'start',
+                }) + ' w-full'
               }
             >
               <HiFolder className="mr-2 h-4 w-4" />
               {folder.name}
-            </Link>
+            </LinkWithActiveStyle>
           ))}
         </div>
       </div>

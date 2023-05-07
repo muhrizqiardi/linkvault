@@ -1,7 +1,8 @@
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/utils/cn';
 import { Suspense } from 'react';
 import { HiEllipsisVertical, HiFolder, HiHome } from 'react-icons/hi2';
+import { LinkWithActiveStyle } from './link-with-active-style';
 import SidebarBaseFolderList, {
   SidebarBaseFolderListSkeleton,
 } from './sidebar-base-folder-list';
@@ -16,14 +17,26 @@ export function SidebarBase({ className }: SidebarBaseProps) {
         <div className="px-4 py-2">
           <div className="space-y-1">
             <SidebarBaseUserDropdownMenu />
-            <Button
-              variant="secondary"
-              size="sm"
-              className="w-full justify-start"
+            <LinkWithActiveStyle
+              href="/"
+              className={
+                buttonVariants({
+                  variant: 'ghost',
+                  size: 'sm',
+                  justify: 'start',
+                }) + ' w-full'
+              }
+              activeClassName={
+                buttonVariants({
+                  variant: 'secondary',
+                  size: 'sm',
+                  justify: 'start',
+                }) + ' w-full'
+              }
             >
               <HiHome className="mr-2 h-4 w-4" />
               All links
-            </Button>
+            </LinkWithActiveStyle>
           </div>
         </div>
 
