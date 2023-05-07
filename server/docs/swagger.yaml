@@ -42,6 +42,11 @@ definitions:
         minLength: 8
         type: string
     type: object
+  dtos.UpdateFolderDto:
+    properties:
+      name:
+        type: string
+    type: object
   dtos.UpdateLinkDto:
     properties:
       cover_url:
@@ -213,21 +218,11 @@ paths:
       consumes:
       - application/json
       parameters:
-      - default: updatedAt_DESC
-        description: Order by title, created date, or modified date
-        in: query
-        name: orderBy
+      - description: Folder id
+        in: path
+        name: folderId
+        required: true
         type: string
-      - default: 10
-        description: Limit every page
-        in: query
-        name: limit
-        type: integer
-      - default: 1
-        description: Page count
-        in: query
-        name: page
-        type: integer
       responses:
         "201":
           description: Folder(s) found
@@ -243,7 +238,7 @@ paths:
             $ref: '#/definitions/utils.BaseResponse-any'
       security:
       - Bearer: []
-      summary: Get many folders belongs to user
+      summary: Get details about a folder belongs to user
       tags:
       - folder
     post:
@@ -272,6 +267,40 @@ paths:
       security:
       - Bearer: []
       summary: Create a folder
+      tags:
+      - folder
+  /folders/{folderId}:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Folder ID
+        in: path
+        name: folderId
+        required: true
+        type: string
+      - description: Update folder payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateFolderDto'
+      responses:
+        "201":
+          description: Folder(s) found
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-entities_FolderEntity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.BaseResponse-any'
+      security:
+      - Bearer: []
+      summary: Update folder detail
       tags:
       - folder
   /folders/{folderId}/links:
