@@ -1,12 +1,12 @@
 import { folderEntitySchema } from '@/entities';
-import { HiEllipsisVertical, HiFolder, HiFolderPlus } from 'react-icons/hi2';
-import { Button, buttonVariants } from './ui/button';
+import { HiEllipsisVertical, HiFolderPlus } from 'react-icons/hi2';
+import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
 import { cookies } from 'next/headers';
 import { env } from '@/utils/env';
 import * as z from 'zod';
-import { LinkWithActiveStyle } from './link-with-active-style';
 import { SidebarBaseFolderListCreateFolderPopup } from './sidebar-base-folder-list-create-folder-popup';
+import { SidebarBaseFolderListItem } from './sidebar-base-folder-list-item';
 
 const getFolders = async () => {
   try {
@@ -62,27 +62,7 @@ export default async function SidebarBaseFolderList() {
         ) : null}
         <div className="space-y-1 py-2 flex flex-col">
           {folders.map((folder, index) => (
-            <LinkWithActiveStyle
-              key={index}
-              href={`/folders/${folder.id}`}
-              className={
-                buttonVariants({
-                  variant: 'ghost',
-                  size: 'sm',
-                  justify: 'start',
-                }) + ' w-full'
-              }
-              activeClassName={
-                buttonVariants({
-                  variant: 'secondary',
-                  size: 'sm',
-                  justify: 'start',
-                }) + ' w-full'
-              }
-            >
-              <HiFolder className="mr-2 h-4 w-4" />
-              {folder.name}
-            </LinkWithActiveStyle>
+            <SidebarBaseFolderListItem key={index} folder={folder} />
           ))}
         </div>
       </div>
