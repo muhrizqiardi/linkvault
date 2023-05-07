@@ -28,6 +28,7 @@ export function SidebarBase({ className }: SidebarBaseProps) {
         </div>
 
         <Suspense fallback={<SidebarBaseFolderListSkeleton />}>
+          {/* @ts-expect-error Async Server Component */}
           <SidebarBaseFolderList />
         </Suspense>
 
