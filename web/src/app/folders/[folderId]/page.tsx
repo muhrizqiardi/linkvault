@@ -1,5 +1,8 @@
 import * as z from 'zod';
-import { LinkListCard } from '@/components/link-list-card';
+import {
+  LinkListCard,
+  LinkListCardSkeleton,
+} from '@/components/link-list-card';
 import { SidebarBase } from '@/components/sidebar-base';
 import {
   TopNavFolderPage,

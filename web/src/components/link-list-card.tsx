@@ -3,14 +3,36 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@/components/ui/card';
 import Link from 'next/link';
 import { HiFolder } from 'react-icons/hi2';
 import {
-  ContextMenu, ContextMenuContent,
-  ContextMenuItem, ContextMenuTrigger
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
 } from './ui/context-menu';
+import { Skeleton } from './ui/skeleton';
+
+export function LinkListCardSkeleton() {
+  return (
+    <div className="border-b flex">
+      <div className="p-3.5 pr-0 flex-shrink-0">
+        <Skeleton className="aspect-[1200/680] w-24" />
+      </div>
+      <div className="p-3.5 w-full">
+        <Skeleton className="h-3 mb-2 w-1/3" />
+        <Skeleton className="h-6 mb-3" />
+        <Skeleton className="h-3 mb-2" />
+        <Skeleton className="h-3 mb-2" />
+        <Skeleton className="h-3 mb-2" />
+        <Skeleton className="h-3 mb-2" />
+        <Skeleton className="h-3 mb-2" />
+      </div>
+    </div>
+  );
+}
 
 export function LinkListCard() {
   return (
@@ -19,11 +41,11 @@ export function LinkListCard() {
         <Link href="/">
           <Card className="border-t-0 border-r-0 border-l-0 shadow-none rounded-none hover:bg-black hover:bg-opacity-5">
             <div className="flex">
-              <div className="p-3.5 pr-0">
+              <div className="p-3.5 pr-0 flex-shrink-0">
                 <img
                   src="https://picsum.photos/id/237/200/300"
                   alt=""
-                  className="aspect-[1200/628] w-full object-contain bg-neutral-200 rounded-sm"
+                  className="aspect-[1200/680] w-24 object-contain bg-neutral-200 rounded-sm"
                 />
               </div>
               <div className="block">
