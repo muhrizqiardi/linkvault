@@ -24,3 +24,8 @@ export const createFolderPopupFormDto = z.object({
 
 export interface CreateFolderPopupFormDto
   extends z.infer<typeof createFolderPopupFormDto> {}
+
+export const updateFolderDtoSchema = createFolderPopupFormDto.partial();
+
+export interface UpdateFolderDto
+  extends z.infer<typeof updateFolderDtoSchema> {}
