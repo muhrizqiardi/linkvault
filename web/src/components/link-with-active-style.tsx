@@ -7,16 +7,30 @@ interface LinkWithActiveStyleProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   activeClassName: string;
+  className: string;
 }
 
 export function LinkWithActiveStyle({
   activeClassName,
+  className,
+  href,
   ...restOfProps
 }: LinkWithActiveStyleProps) {
   const pathname = usePathname();
 
-  if (pathname === null || pathname.startsWith(restOfProps.href))
-    return <Link {...restOfProps} />;
+  const activeStyledLink = (
+    <Link href={href} legacyBehavior>
+      <a className={activeClassName} {...restOfProps} />
+    </Link>
+  );
+  const inactiveStyledLink = (
+    <Link href={href} legacyBehavior>
+      <a className={className} {...restOfProps} />
+    </Link>
+  );
 
-  return <Link {...restOfProps} className={activeClassName} />;
+  if (pathname === null) return inactiveStyledLink;
+  if (pathname === href) return activeStyledLink;
+
+  return inactiveStyledLink;
 }
