@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react';
 import {
   HiBars3,
   HiBarsArrowDown,
+  HiChevronDoubleLeft,
   HiMagnifyingGlass,
+  HiPencil,
   HiPlus,
 } from 'react-icons/hi2';
 import { SidebarSheet } from './sidebar-sheet';
@@ -24,7 +26,7 @@ import { Label } from './ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 
-export function TopNavBase() {
+export function TopNavFolderPage() {
   const [isClientSide, setIsClientSide] = useState<boolean>(false);
   const [orderedByValue, setOrderedByValue] = useState<
     | 'title_ASC'
@@ -43,7 +45,7 @@ export function TopNavBase() {
 
   return (
     <header className="flex h-14 items-center px-4 border-b">
-      <nav className="w-full flex items-center gap-2">
+      <nav className="w-full flex gap-2">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="sm" className="mr-auto lg:hidden">
@@ -55,7 +57,9 @@ export function TopNavBase() {
           </SheetContent>
         </Sheet>
 
-        <p className="text-sm font-medium mx-auto">All links</p>
+        <Button variant="link" justify="start" className="mx-auto">
+          Folder name <HiPencil className="ml-2" />
+        </Button>
 
         <Link
           className={`${buttonVariants({
