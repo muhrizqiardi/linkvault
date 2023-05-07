@@ -1,13 +1,7 @@
 import * as z from 'zod';
-import {
-  LinkListCard,
-  LinkListCardSkeleton,
-} from '@/components/link-list-card';
-import { SidebarBase } from '@/components/sidebar-base';
-import {
-  TopNavFolderPage,
-  TopNavFolderPageSkeleton,
-} from '@/components/top-nav-folder-page';
+import { LinkListCard } from '@/components/link-list-card';
+import { TopNavFolderPage } from '@/components/top-nav-folder-page';
+import { TopNavFolderPageSkeleton } from '@/components/top-nav-folder-page-skeleton';
 import { env } from '@/utils/env';
 import { cookies } from 'next/headers';
 import { folderEntitySchema, linkEntitySchema } from '@/entities';
