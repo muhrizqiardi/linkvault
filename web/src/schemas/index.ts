@@ -17,3 +17,10 @@ export const signInPageFormDtoSchema = z.object({
 
 export interface SignInPageFormDto
   extends z.infer<typeof signInPageFormDtoSchema> {}
+
+export const createFolderPopupFormDto = z.object({
+  name: z.string(),
+});
+
+export interface CreateFolderPopupFormDto
+  extends z.infer<typeof createFolderPopupFormDto> {}

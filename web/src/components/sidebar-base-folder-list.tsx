@@ -5,8 +5,8 @@ import { Skeleton } from './ui/skeleton';
 import { cookies } from 'next/headers';
 import { env } from '@/utils/env';
 import * as z from 'zod';
-import Link from 'next/link';
 import { LinkWithActiveStyle } from './link-with-active-style';
+import { SidebarBaseFolderListCreateFolderPopup } from './sidebar-base-folder-list-create-folder-popup';
 
 const getFolders = async () => {
   try {
@@ -52,9 +52,7 @@ export default async function SidebarBaseFolderList() {
             <Button variant="ghost" size="sm" className="rounded-full h-9 w-9">
               <HiEllipsisVertical />
             </Button>
-            <Button variant="ghost" size="sm" className="rounded-full h-9 w-9">
-              <HiFolderPlus />
-            </Button>
+            <SidebarBaseFolderListCreateFolderPopup />
           </div>
         </div>
         {folders.length === 0 ? (
