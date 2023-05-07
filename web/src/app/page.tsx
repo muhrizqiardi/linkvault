@@ -50,8 +50,8 @@ export default async function HomePage() {
       <div className="flex flex-col">
         {links !== null ? (
           <div className="flex flex-col">
-            {links.map((_link, index) => (
-              <LinkListCard key={index} />
+            {links.map((link, index) => (
+              <LinkListCard link={link} key={index} />
             ))}
           </div>
         ) : null}

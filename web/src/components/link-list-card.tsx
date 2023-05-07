@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { LinkEntity } from '@/entities';
 import Link from 'next/link';
 import { HiFolder } from 'react-icons/hi2';
 import {
@@ -14,7 +15,11 @@ import {
   ContextMenuTrigger,
 } from './ui/context-menu';
 
-export function LinkListCard() {
+interface LinkListCardProps {
+  link: LinkEntity;
+}
+
+export function LinkListCard(props: LinkListCardProps) {
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -22,31 +27,29 @@ export function LinkListCard() {
           <Card className="border-t-0 border-r-0 border-l-0 shadow-none rounded-none hover:bg-black hover:bg-opacity-5">
             <div className="flex">
               <div className="p-3.5 pr-0 flex-shrink-0">
-                <img
-                  src="https://picsum.photos/id/237/200/300"
-                  alt=""
-                  className="aspect-[1200/680] w-24 object-contain bg-neutral-200 rounded-sm"
-                />
+                {props.link?.cover_url !== undefined ? (
+                  <img
+                    src={props.link.cover_url}
+                    alt={props.link.title}
+                    className="aspect-[1200/680] w-24 object-contain bg-neutral-200 rounded-sm"
+                  />
+                ) : (
+                  <div className="aspect-[1200/680] w-24 bg-neutral-200 rounded-sm"></div>
+                )}
               </div>
               <div className="block">
                 <CardHeader>
                   <CardDescription className="inline-flex items-center">
-                    twitter.com · 2h ago ·{' '}
+                    {new URL(props.link.url).hostname} · 2h ago ·{' '}
                     <span className="ml-2 inline-flex items-center">
                       <HiFolder className="mr-1" />
                       Bookmarked Tweets
                     </span>
                   </CardDescription>
-                  <CardTitle>Kabar Penumpang on Twitter</CardTitle>
+                  <CardTitle>{props.link.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm">
-                  <p>
-                    Menolak Lupa Proposal Kereta Cepat Jakarta Bandung Jepang:
-                    US$6,2 miliar (75 persennya ditanggung Jepang berupa
-                    pinjaman tenor 40 thn dan bunga 0,1 persen). Menurut kajian,
-                    proyek kereta cepat sulit dgn skema b to b atau tanpa
-                    jaminan pemerintah. China pun dtg skema menggiurkan
-                  </p>
+                  {props.link.excerpt}
                 </CardContent>
               </div>
             </div>

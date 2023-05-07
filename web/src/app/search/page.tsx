@@ -8,9 +8,7 @@ export default function SearchPage() {
       <div className="h-14">
         <TopNavSearch />
       </div>
-      <div className="flex flex-col">
-        <LinkListCard />
-      </div>
+      <div className="flex flex-col"></div>
     </>
   );
 }
