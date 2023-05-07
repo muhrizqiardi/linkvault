@@ -3,7 +3,7 @@ import { SidebarBase } from '@/components/sidebar-base';
 import { TopNavBase } from '@/components/top-nav-base';
 import { TopNavFolderPage } from '@/components/top-nav-folder-page';
 
-export default async function HomePage() {
+export default async function FolderPage() {
   return (
     <div className="grid lg:grid-cols-[256px_576px_minmax(0,1fr)]">
       <div className="">
