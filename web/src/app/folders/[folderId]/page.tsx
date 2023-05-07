@@ -1,6 +1,5 @@
 import { LinkListCard } from '@/components/link-list-card';
 import { SidebarBase } from '@/components/sidebar-base';
-import { TopNavBase } from '@/components/top-nav-base';
 import { TopNavFolderPage } from '@/components/top-nav-folder-page';
 
 export default async function FolderPage() {
