@@ -26,7 +26,16 @@ export const tagEntitySchema = z.object({
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });
-export interface TagEntity extends z.infer<typeof tagEntitySchema> {}
+export interface TagEntity extends z.infer<typeof tagEntitySchemat> {}
+
+export const createNewLinkDtoSchema = z.object({
+  url: z.string(),
+  title: z.string(),
+  excerpt: z.string(),
+  cover_url: z.string(),
+});
+export interface CreateNewLinkDto
+  extends z.infer<typeof createNewLinkDtoSchema> {}
 
 export const linkEntitySchema = z.object({
   id: z.string(),
