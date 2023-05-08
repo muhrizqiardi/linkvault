@@ -1,20 +1,24 @@
 'use client';
 
 import { FolderEntity } from '@/entities';
+import { PopoverClose } from '@radix-ui/react-popover';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import {
   HiBars3,
   HiBarsArrowDown,
+  HiFolder,
   HiMagnifyingGlass,
   HiPencil,
   HiPlus,
 } from 'react-icons/hi2';
 import { SidebarSheet } from './sidebar-sheet';
+import { TopNavFolderPageNewLinkPopup } from './top-nav-folder-page-new-link-popup';
 import { Button, buttonVariants } from './ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -77,41 +81,8 @@ export function TopNavFolderPage(props: TopNavFolderPageProps) {
           <HiMagnifyingGlass />
           <span className="sr-only">Search</span>
         </Link>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" size="sm">
-              <HiPlus />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <div className="grid gap-4">
-              <div className="space-y-2">
-                <h4 className="font-medium leading-none">Add new link</h4>
-              </div>
-              <div className="grid gap-2">
-                <div className="grid grid-cols-3 items-center gap-4">
-                  <Label htmlFor="link-title">Title</Label>
-                  <Input
-                    id="link-title"
-                    placeholder="Insert title here..."
-                    className="col-span-2 h-8"
-                  />
-                </div>
-                <div className="grid grid-cols-3 items-center gap-4">
-                  <Label htmlFor="link-url">URL</Label>
-                  <Input
-                    id="link-url"
-                    type="url"
-                    placeholder="ex: https://twitter.com/user"
-                    className="col-span-2 h-8"
-                  />
-                </div>
 
-                <Button>Add</Button>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+        <TopNavFolderPageNewLinkPopup folderDetail={props.folderDetail} />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
