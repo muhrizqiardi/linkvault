@@ -24,23 +24,37 @@ First, clone this repository, then `cd` into the directory where the repository 
 
 After that, start running the project by doing these:
 
+### Preparing the environment variables
+
+Inside the project's root folder, create a .env file, that will contains environment variables such as database connection, API base URLs, etc. Look at the file .env.example for the example of proper .env file. 
+
 ### Running the front end
 
-1. Build the front end by running this:
+1. Compile the front end by running this:
 
   ```bash
   pnpm -F web build
   ```
+
 2. Finally run the front end by running this:
+
   ```bash
   pnpm -F web start
   ```
 
 ### Running the back end 
 
-1. Make sure that you're on the root directory of the project, then run these to build the project:
+1. Make sure that you're on the root directory of the project, change the directory into /server directory, then run these to build the project:
 
   ```bash
   cd server
   go build
   ```
+
+2. Run these command to install and start the back end:
+
+  ```bash
+  go install
+  go server
+  ```
+
