@@ -2,7 +2,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:13
-    container_name: postgres
+    container_name: linkvault-db-postgres
     restart: always
     ports:
       - '5432:5432'
@@ -13,4 +13,4 @@ services:
 
 volumes:
   postgres:
-    name: linkvault    
+    name: linkvault-db-postgres-volume
