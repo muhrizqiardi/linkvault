@@ -1,6 +1,6 @@
 # LinkVault
 
-A self-hosted bookmarking & archiving app inspired by Zotero, Raindrop.io, Pocket, and Wayback Machine. 
+A selfhost-able bookmarking & archiving app inspired by Zotero, Raindrop.io, Pocket, and Wayback Machine. 
 
 Still work-in-progress.
 
