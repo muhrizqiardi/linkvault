@@ -101,11 +101,6 @@ func (fh *FolderHandler) GetManyFoldersBelongsToUser(w http.ResponseWriter, r *h
 		page = defaultPage
 	}
 	orderBy := r.URL.Query().Get("orderBy")
-	if err := utils.ValidateEnumString(orderBy, "title_ASC", "title_DESC", "createdAt_ASC", "createdAt_DESC", "updatedAt_ASC", "updatedAt_DESC"); err != nil {
-		utils.BaseResponseWriter[any](w, http.StatusBadRequest, false, "Bad Request", nil)
-		fh.l.Println(err.Error())
-		return
-	}
 
 	folders, err := fh.folderService.GetManyBelongsToUser(uuid.MustParse(userClaims.UserId), orderBy, limit, page)
 	if err != nil {
