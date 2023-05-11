@@ -77,7 +77,7 @@ export default async function FolderPage(props: {
 
   return (
     <>
-      <div className="h-14">
+      <div className="h-14 border-b">
         {folderDetail !== null ? (
           <TopNavFolderPage folderDetail={folderDetail} />
         ) : (
