@@ -4,7 +4,7 @@ import { TopNavFolderPageSkeleton } from '@/components/top-nav-folder-page-skele
 export default function FolderPageLoading() {
   return (
     <>
-      <div className="h-14">
+      <div className="h-14 border-b">
         <TopNavFolderPageSkeleton />
       </div>
       <LinkListCardSkeleton />
