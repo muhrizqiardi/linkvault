@@ -1,6 +1,5 @@
 import * as z from 'zod';
 import { LinkListCard } from '@/components/link-list-card';
-import { SidebarBase } from '@/components/sidebar-base';
 import { TopNavBase } from '@/components/top-nav-base';
 import { env } from '@/utils/env';
 import { cookies } from 'next/headers';
