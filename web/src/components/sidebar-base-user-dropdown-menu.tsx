@@ -35,10 +35,11 @@ export function SidebarBaseUserDropdownMenu() {
               {data.full_name
                 .split(' ')
                 .map((x) => x[0].toUpperCase())
-                .join('')}
+                .join('')
+                .slice(0, 2)}
             </AvatarFallback>
           </Avatar>
-          <span className="ml-2">{data.full_name}</span>
+          <span className="ml-2 text-left">{data.full_name}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
