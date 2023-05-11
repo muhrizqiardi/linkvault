@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Card,
   CardContent,
@@ -6,7 +8,10 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { LinkEntity } from '@/entities';
+import { cn } from '@/utils/cn';
+import { headers } from 'next/headers';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { HiFolder } from 'react-icons/hi2';
 import {
   ContextMenu,
@@ -16,15 +21,26 @@ import {
 } from './ui/context-menu';
 
 interface LinkListCardProps {
+  customHref?: string;
   link: LinkEntity;
 }
 
 export function LinkListCard(props: LinkListCardProps) {
+  const pathname = usePathname();
+  const { customHref = `/links/${props.link.id}` } = props;
+
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <Link href="/">
-          <Card className="border-t-0 border-r-0 border-l-0 shadow-none rounded-none hover:bg-black hover:bg-opacity-5">
+        <Link href={customHref}>
+          <Card
+            className={cn(
+              'border-t-0 border-r-0 border-l-0 shadow-none rounded-none hover:bg-black hover:bg-opacity-5',
+              pathname?.startsWith(customHref)
+                ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                : '',
+            )}
+          >
             <div className="flex">
               <div className="p-3.5 pr-0 flex-shrink-0">
                 {props.link?.cover_url !== undefined ? (

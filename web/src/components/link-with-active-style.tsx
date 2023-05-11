@@ -8,12 +8,14 @@ interface LinkWithActiveStyleProps
   href: string;
   activeClassName: string;
   className: string;
+  matchStartWith?: boolean;
 }
 
 export function LinkWithActiveStyle({
   activeClassName,
   className,
   href,
+  matchStartWith,
   ...restOfProps
 }: LinkWithActiveStyleProps) {
   const pathname = usePathname();
@@ -30,7 +32,10 @@ export function LinkWithActiveStyle({
   );
 
   if (pathname === null) return inactiveStyledLink;
-  if (pathname === href) return activeStyledLink;
-
+  if (matchStartWith) {
+    if (pathname.startsWith(href)) return activeStyledLink;
+  } else if (pathname === href) {
+    return activeStyledLink;
+  }
   return inactiveStyledLink;
 }

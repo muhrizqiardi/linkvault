@@ -104,6 +104,7 @@ export function SidebarBaseFolderListItem(props: { folder: FolderEntity }) {
         <ContextMenuTrigger asChild>
           <LinkWithActiveStyle
             href={`/folders/${props.folder.id}`}
+            matchStartWith
             className={
               buttonVariants({
                 variant: 'ghost',
