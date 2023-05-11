@@ -6,18 +6,20 @@ const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,
+  linkDetailPanel,
 }: {
   children: React.ReactNode;
+  linkDetailPanel: React.ReactNode;
 }) {
   return (
     <html lang="en" className={`${inter.className}`}>
       <body>
         <div className="grid lg:grid-cols-[256px_576px_minmax(0,1fr)]">
-          <div className="">
+          <div className="h-screen sticky top-o">
             <SidebarBase className="border-r hidden lg:block" />
           </div>
           <div className="border-r">{children}</div>
-          <div className=""></div>
+          <div className="h-full">{linkDetailPanel}</div>
         </div>
       </body>
     </html>
