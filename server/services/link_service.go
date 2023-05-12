@@ -51,7 +51,7 @@ func (ls *LinkService) Create(ownerId uuid.UUID, folderId uuid.UUID, payload dto
 
 func (ls *LinkService) GetOne(linkId uuid.UUID) (entities.LinkEntity, error) {
 	getOneLinkQuery := `
-		select id, url, excerpt, cover_url, owner_id, folder_id, created_at, updated_at
+		select id, title, url, excerpt, cover_url, owner_id, folder_id, created_at, updated_at
 			from public.links
 			where id = $1; 
 	`
